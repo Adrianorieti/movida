@@ -12,3 +12,4 @@ local.properties
 .recommenders
 src/asdlab/
 .classpath
+.project
