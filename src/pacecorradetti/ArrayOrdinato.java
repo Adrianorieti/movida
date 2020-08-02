@@ -7,39 +7,39 @@ package pacecorradetti;
  */
 
 
-public class ArrayOrdinato {
+public class ArrayOrdinato<K extends Comparable<K>, E extends Object> {
 	
-	Pair array[];
+	private Pair array[];
 	int lastIndex;
 	
-
-	
-	ArrayOrdinato(int length) {
-		array = new Pair[length];
-		lastIndex = -1;
-	}
-	
-	ArrayOrdinato() {
-		array = new Pair[1];
-		lastIndex = -1;
-	}
-
 	protected class Pair {
-		Object elem;
-		Comparable key;
+		K key;
+		E elem;
 		
-		Pair(Object elem, Comparable key) {
-			this.elem = elem;
+		Pair(K key, E elem) {
 			this.key = key;
+			this.elem = elem;
 		}
 	}
+
+	
+	public ArrayOrdinato(int length) {
+		array =  (Pair[]) new Object[length];
+		lastIndex = -1;
+	}
+	
+	public ArrayOrdinato() {
+		array = (Pair[]) new Object[1];
+		lastIndex = -1;
+	}
+
 		
 	
-	private int locationOf(Comparable key) {
+	private int locationOf(K key) {
 		return locationOf(key, 0, lastIndex);
 	}
 	
-	private int locationOf(Comparable key, int low, int up) {
+	private int locationOf(K key, int low, int up) {
 		int pivot = (low + up) / 2;
 		if (array[pivot].key.equals(key)) 
 			return pivot;
@@ -51,15 +51,11 @@ public class ArrayOrdinato {
 			return locationOf(key, pivot, up);
 	}
 	
-	public void insert(Object elem, Comparable key) {
+	public void insert(K key, E elem) {
 		
-		//TODO implement binary search
-		/*
-		 * int i = 0; while (i <= lastIndex && key.compareTo(array[i].key) > 0) i++;
-		 */
 		if (lastIndex == -1) 
 		{
-			array[0] = new Pair(elem, key);
+			array[0] = new Pair(key, elem);
 			lastIndex = 0;
 			return;
 		}
@@ -67,7 +63,7 @@ public class ArrayOrdinato {
 		int i = locationOf(key);
 	
 		if (i <= lastIndex && key.compareTo(array[i].key) == 0)
-			array[i] = new Pair(elem, key);
+			array[i] = new Pair(key, elem);
 		else 
 		{
 			if (lastIndex + 1 < array.length)
@@ -75,15 +71,15 @@ public class ArrayOrdinato {
 				for (int j = lastIndex; j >= i; j--)
 					array[j+1] = array[j];
 				
-				array[i] = new Pair(elem, key);
+				array[i] = new Pair(key, elem);
 			}
 			else
 			{
-				Pair temp[] = new Pair[array.length * 2];
+				Pair temp[] = (Pair[]) new Object[array.length * 2];
 				
 				for (int j = 0; j < i; j++ ) 
 					temp[j] = array[j];
-				temp[i] = new Pair(elem, key);
+				temp[i] = new Pair(key, elem);
 				for (int j = i; j <= lastIndex; j++)
 					temp[j+1] = array[j];
 				
@@ -93,22 +89,15 @@ public class ArrayOrdinato {
 		}
 	}
 
-	
-	public void delete(Comparable key) throws MovidaKeyException  {
-		/*
-		 * int i = 0;
-		 * 
-		 * //TODO implement binary search while (i <= lastIndex &&
-		 * !key.equals(array[i].key)) i++;
-		 */
+	public void delete(K key) throws MovidaKeyException  {
 		
 		int i = locationOf(key);
-		if (!array[i].key.equals(key)) throw new MovidaKeyException(); //TODO handle exception if key is not found
+		if (!array[i].key.equals(key)) throw new MovidaKeyException();
 		
 		if (i > lastIndex) return;					
 		if (lastIndex - 1 < array.length / 2)
 		{
-			Pair temp[] = new Pair[array.length / 2];
+			Pair temp[] = (Pair[]) new Object[array.length / 2];
 			for (int j = 0; j < i; j++) 
 				temp[j] = array[j];
 			for (int j = i+1; j <= lastIndex; j++) 
@@ -128,7 +117,7 @@ public class ArrayOrdinato {
 		lastIndex--;
 	}
 	
-	public Object search(Comparable key) throws MovidaKeyException {	//TODO handle exception if key is not found
+	public E search(K key) throws MovidaKeyException {
 		int i = locationOf(key);
 		if (array[i].key.equals(key))
 			return array[i].elem;
@@ -140,5 +129,7 @@ public class ArrayOrdinato {
 		return array.length;
 	}
 	
-
+	public boolean isEmpty() {
+		return (lastIndex == -1);
+	}
 }	
