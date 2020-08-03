@@ -11,6 +11,10 @@ import movida.commons.Person;
 import movida.commons.SortingAlgorithm;
 
 public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
+	
+	MapImplementation selectedMap = MapImplementation.ArrayOrdinato;
+	SortingAlgorithm selectedAlg = SortingAlgorithm.QuickSort;
+	
 
 	@Override
 	public Movie[] searchMoviesByTitle(String title) {
@@ -116,14 +120,36 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
 
 	@Override
 	public boolean setSort(SortingAlgorithm a) {
-		// TODO Auto-generated method stub
-		return false;
+		switch (a) {
+		case QuickSort: {
+			selectedAlg = SortingAlgorithm.QuickSort;
+			return true;
+		}
+		case InsertionSort: {
+			selectedAlg = SortingAlgorithm.SelectionSort;
+			return true;
+		}
+		default:
+			//throw new IllegalArgumentException("Unexpected value: " + a);
+			return false;
+		}
 	}
 
 	@Override
 	public boolean setMap(MapImplementation m) {
-		// TODO Auto-generated method stub
-		return false;
+		switch (m) {
+		case ArrayOrdinato: {
+			selectedMap = MapImplementation.ArrayOrdinato;
+			return true;
+		}
+		case HashIndirizzamentoAperto: {
+			selectedMap = MapImplementation.HashIndirizzamentoAperto;
+			return true;
+		}
+		default:
+			//throw new IllegalArgumentException("Unexpected value: " + m);
+			return false;
+		}
 	}
 
 }
