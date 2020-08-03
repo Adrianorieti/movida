@@ -3,22 +3,21 @@ package pacecorradetti;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Algorithms {
-	public static void quickSort (Comparable array[]) {
+	public static <K extends Comparable<K>> void quickSort (K array[]) {
 		quickSort(array, 0, array.length-1);
 	}
 	
-	public static void quickSort (Comparable array[], int low, int high) {
+	public static <K extends Comparable<K>> void quickSort (K array[], int low, int high) {
 		if (low >= high) return;
 		int m = partition(array, low, high);
 		quickSort(array, low, m-1);
 		quickSort(array, m+1, high);
 	}
 	
-	private static int partition(Comparable array[], int low, int high) {
+	private static <K extends Comparable<K>> int partition(K array[], int low, int high) {
 		int i = low, j = high + 1;
 		int m = ThreadLocalRandom.current().nextInt(i, j);
-		Comparable temp;
-		Comparable pivot = array[m];
+		K pivot = array[m];
 		
 		swap(array, low, m);
 		
