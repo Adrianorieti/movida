@@ -15,6 +15,8 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
 	MapImplementation selectedMap = MapImplementation.ArrayOrdinato;
 	SortingAlgorithm selectedAlg = SortingAlgorithm.QuickSort;
 	
+	Map<String, Movie> map;
+	
 
 	@Override
 	public Movie[] searchMoviesByTitle(String title) {
@@ -72,8 +74,7 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
 
 	@Override
 	public void clear() {
-		// TODO Auto-generated method stub
-
+		map.clear();
 	}
 
 	@Override
@@ -90,14 +91,18 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
 
 	@Override
 	public boolean deleteMovieByTitle(String title) {
-		// TODO Auto-generated method stub
-		return false;
+		try {
+			map.delete(title);
+			return true;
+		} catch (MovidaKeyException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	@Override
 	public Movie getMovieByTitle(String title) {
-		// TODO Auto-generated method stub
-		return null;
+		return map.search(title);
 	}
 
 	@Override
@@ -122,11 +127,11 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
 	public boolean setSort(SortingAlgorithm a) {
 		switch (a) {
 		case QuickSort: {
-			selectedAlg = SortingAlgorithm.QuickSort;
+			//TODO set quicksort
 			return true;
 		}
 		case InsertionSort: {
-			selectedAlg = SortingAlgorithm.SelectionSort;
+			//TODO set Insertion sort;
 			return true;
 		}
 		default:
@@ -140,10 +145,11 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
 		switch (m) {
 		case ArrayOrdinato: {
 			selectedMap = MapImplementation.ArrayOrdinato;
+			map = new ArrayOrdinato<String, Movie>();
 			return true;
 		}
 		case HashIndirizzamentoAperto: {
-			selectedMap = MapImplementation.HashIndirizzamentoAperto;
+			//TODO selectedMap = 
 			return true;
 		}
 		default:

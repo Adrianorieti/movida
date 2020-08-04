@@ -7,7 +7,7 @@ package pacecorradetti;
  */
 
 
-public class ArrayOrdinato<K extends Comparable<K>, E extends Object> {
+public class ArrayOrdinato<K extends Comparable<K>, E extends Object> extends Map<K, E>{
 	
 	private Pair array[];
 	int lastIndex;
@@ -51,6 +51,7 @@ public class ArrayOrdinato<K extends Comparable<K>, E extends Object> {
 			return locationOf(key, pivot, up);
 	}
 	
+	@Override
 	public void insert(K key, E elem) {
 		
 		if (lastIndex == -1) 
@@ -89,6 +90,7 @@ public class ArrayOrdinato<K extends Comparable<K>, E extends Object> {
 		}
 	}
 
+	@Override
 	public void delete(K key) throws MovidaKeyException  {
 		
 		int i = locationOf(key);
@@ -117,6 +119,7 @@ public class ArrayOrdinato<K extends Comparable<K>, E extends Object> {
 		lastIndex--;
 	}
 	
+	@Override
 	public E search(K key) throws MovidaKeyException {
 		int i = locationOf(key);
 		if (array[i].key.equals(key))
@@ -132,4 +135,11 @@ public class ArrayOrdinato<K extends Comparable<K>, E extends Object> {
 	public boolean isEmpty() {
 		return (lastIndex == -1);
 	}
+
+	@Override
+	public void clear() {
+		for (int i = 0; i < array.length; i++)
+			array[i] = null;
+	}
+
 }	
