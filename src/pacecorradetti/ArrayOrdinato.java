@@ -10,7 +10,7 @@ package pacecorradetti;
 public class ArrayOrdinato<K extends Comparable<K>, E extends Object> extends Map<K, E>{
 	
 	private Pair array[];
-	int lastIndex;
+	private int lastIndex;
 	
 	protected class Pair {
 		K key;
