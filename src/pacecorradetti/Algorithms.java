@@ -49,4 +49,21 @@ public class Algorithms {
 		array[j] = temp;
 	}
 
+public static  <K extends Comparable<K>> void InsertionSort(K A[])
+{
+	for(int k=1;k <= A.length -1;k++)
+	{
+		int j=0;
+		Comparable x = A[k]; //salvo k in una variabile perchè dovò sovrascrivere k e lo perderei
+		for( j = 0 ; j < k ;j++) 
+			if(A[j].compareTo(x) > 0) break;  // devo mettere x perchè è un oggetto di tipo comparable(se j > A[k])
+			if(j < k) {
+			for(int t = k; t > j;t--)
+				A[t] = A[t -1];
+			A[j]=x;
+			}
+	}
+}
+
+
 }
