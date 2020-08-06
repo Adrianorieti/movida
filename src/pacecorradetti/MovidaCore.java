@@ -11,7 +11,7 @@ import movida.commons.Person;
 import movida.commons.SortingAlgorithm;
 
 public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
-	
+	//TODO implement last selected
 	MapImplementation selectedMap = MapImplementation.ArrayOrdinato;
 	SortingAlgorithm selectedAlg = SortingAlgorithm.QuickSort;
 	
