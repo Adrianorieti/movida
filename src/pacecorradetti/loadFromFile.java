@@ -1,4 +1,4 @@
-package PaceCorradetti;
+package pacecorradetti;
 
 import java.util.Scanner;
 
