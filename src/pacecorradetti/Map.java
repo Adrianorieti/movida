@@ -1,7 +1,7 @@
 package pacecorradetti;
 
 abstract class Map<K extends Comparable<K>, E extends Object> {
-	abstract public void insert(K key, E elem);
+	abstract public void put(K key, E elem);
 
 	
 	abstract void delete(K key) throws MovidaKeyException;

@@ -52,7 +52,7 @@ public class ArrayOrdinato<K extends Comparable<K>, E extends Object> extends Ma
 	}
 	
 	@Override
-	public void insert(K key, E elem) {
+	public void put(K key, E elem) {
 		
 		if (lastIndex == -1) 
 		{
@@ -101,9 +101,13 @@ public class ArrayOrdinato<K extends Comparable<K>, E extends Object> extends Ma
 		{
 			Pair temp[] = (Pair[]) new Object[array.length / 2];
 			for (int j = 0; j < i; j++) 
+			{				
 				temp[j] = array[j];
+			}
 			for (int j = i+1; j <= lastIndex; j++) 
-				temp[j-1] = array[j];
+			{
+				temp[j-1] = array[j];				
+			}
 			
 			array = temp;
 
@@ -111,11 +115,12 @@ public class ArrayOrdinato<K extends Comparable<K>, E extends Object> extends Ma
 		else 
 		{
 			for (int j = i; j < lastIndex; j++)
-				array[j] = array[j+1];
+			{
+				array[j] = array[j+1];				
+			}
 			
 			array[lastIndex] = null;
-		}
-		
+		}	
 		lastIndex--;
 	}
 	
@@ -123,9 +128,13 @@ public class ArrayOrdinato<K extends Comparable<K>, E extends Object> extends Ma
 	public E search(K key) throws MovidaKeyException {
 		int i = locationOf(key);
 		if (array[i].key.equals(key))
-			return array[i].elem;
+		{
+			return array[i].elem;			
+		}
 		else
-			throw new MovidaKeyException();		
+		{
+			throw new MovidaKeyException();					
+		}
 	}
 
 	public int length() {
@@ -136,6 +145,8 @@ public class ArrayOrdinato<K extends Comparable<K>, E extends Object> extends Ma
 		return (lastIndex == -1);
 	}
 
+	
+		
 	@Override
 	public void clear() {
 		for (int i = 0; i < array.length; i++)
