@@ -10,6 +10,9 @@ import java.io.FileNotFoundException;
 
 import movida.commons.*;
 
+//TODO replace util.map with pacecorradetti.map
+
+
 public class LoadFromFile {
 	HashMap<String, PersonNode> personMap;
 	HashMap<String, Movie> movieMap;
