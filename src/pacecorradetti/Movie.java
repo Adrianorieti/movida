@@ -19,16 +19,18 @@ public class Movie extends movida.commons.Movie{
 	
 	public Movie(String title, Integer year, Integer votes,
 			Person[] cast, Person director) {
-		super (title, year, votes, cast, director);
+		super (title, year, votes, null, null);
+		this.cast = cast;
+		this.director = director;
 	}
 
 	
 	public Person[] getCast() {
-		return this.cast;
+		return cast;
 	}
 
 	public Person getDirector() {
-		return this.director;
+		return director;
 	}
 	
 	

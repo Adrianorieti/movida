@@ -2,13 +2,15 @@ package pacecorradetti;
 
 import java.util.Scanner;
 
+import movida.commons.MovidaFileException;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import movida.commons.*;
+
 
 //TODO replace util.map with pacecorradetti.map
 

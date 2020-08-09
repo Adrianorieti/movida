@@ -15,7 +15,7 @@ public class Person extends movida.commons.Person {
 	
 	public Person(String name) {
 		super(name);	
-		new ArrayList<Collaboration>();
+		collabs = new ArrayList<Collaboration>();
 	}	 
 	
  }
