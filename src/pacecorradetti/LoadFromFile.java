@@ -14,7 +14,7 @@ import movida.commons.*;
 
 
 public class LoadFromFile {
-	HashMap<String, PersonNode> personMap;
+	HashMap<String, Person> personMap;
 	HashMap<String, Movie> movieMap;
 	
 	public void load(File f) throws MovidaFileException, FileNotFoundException {
@@ -24,17 +24,17 @@ public class LoadFromFile {
 		String line;
 		String title = null;
 		String directorName;
-		PersonNode director;
+		Person director;
 		int year = 0;
 		int votes = 0;
-		/* HashMap<String, Person> */personMap = new HashMap<String, PersonNode>();
+		/* HashMap<String, Person> */personMap = new HashMap<String, Person>();
 		/* HashMap<String, Movie> */movieMap = new HashMap<String, Movie>();
-		List<PersonNode> cast;
-		PersonNode personToAdd = null;
+		List<Person> cast;
+		Person personToAdd = null;
 
 		while (scan.hasNextLine()) 
 		{
-			cast = new ArrayList<PersonNode>();
+			cast = new ArrayList<Person>();
 
 			line = scan.nextLine();		
 			title = formatLine(line);
@@ -44,7 +44,7 @@ public class LoadFromFile {
 			
 			line = scan.nextLine();
 			directorName = formatLine(line);	
-			director = new PersonNode(directorName);
+			director = new Person(directorName);
 			personMap.putIfAbsent(directorName, director);
 			
 			line = scan.nextLine();
@@ -53,7 +53,7 @@ public class LoadFromFile {
 			for (int i = 0; i < names.length; i++)  		// aggiunge all'array Person[] tutte le nuove persone, riempie il cast
 			{
 				// cast = addPerson(cast,new Person(names[i].trim())); //se fosse un array
-				personToAdd = new PersonNode(names[i].trim());
+				personToAdd = new Person(names[i].trim());
 				cast.add(personToAdd); 
 				personMap.putIfAbsent(personToAdd.getName(), personToAdd);
 				
@@ -62,7 +62,7 @@ public class LoadFromFile {
 			line = scan.nextLine();
 			votes = Integer.parseInt(formatLine(line));
 
-			PersonNode[] castArray = cast.toArray(new PersonNode[0]);
+			Person[] castArray = cast.toArray(new Person[0]);
 			Movie movieToAdd = new Movie(title, year, votes, castArray, director);
 			movieMap.putIfAbsent(movieToAdd.getTitle(), movieToAdd);
 			
