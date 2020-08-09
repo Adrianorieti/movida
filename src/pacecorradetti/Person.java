@@ -1,15 +1,19 @@
 package pacecorradetti;
 
+/**
+ * La classe estende movida.commons.Person aggiungendo una lista di collaborazioni
+ */
+
+
+
+
 import java.util.ArrayList;
 
-import movida.commons.Collaboration;
-import movida.commons.Person;
-
-public class PersonNode extends Person {
+public class Person extends movida.commons.Person {
 	
 	ArrayList<Collaboration> collabs;
 	
-	public PersonNode(String name) {
+	public Person(String name) {
 		super(name);	
 		new ArrayList<Collaboration>();
 	}	 
