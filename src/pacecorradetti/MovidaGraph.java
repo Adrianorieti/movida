@@ -3,53 +3,76 @@ package pacecorradetti;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map;
-
-import jdk.internal.org.jline.terminal.impl.LineDisciplineTerminal;
-
 import java.util.List;
 
-import movida.commons.*;
 
 public class MovidaGraph {
 	
 	List<Collaboration> collaborations;
-	HashMap<String, PersonNode> persons;
+	HashMap<String, Person> persons;
 	
-	public MovidaGraph(Map<String, Movie> movies, Map<String, PersonNode> persons) {
+	public MovidaGraph(Map<String, Movie> movies, Map<String, Person> persons) {
 		this.collaborations = new ArrayList<Collaboration>();
 		populateCollaborations(movies, persons);
 	}
 	
 	
-	public void populateCollaborations(Map<String, Movie> movies, Map<String, PersonNode> persons) {
-		LinkedList<Person> personList = new LinkedList<Person>();
-		Iterator<Person> it = personList.iterator();
+	public void populateCollaborations(Map<String, Movie> movies, Map<String, Person> persons) {
+		ArrayList<Person> castQueue = new ArrayList<Person>();
+		Iterator<Person> it = castQueue.iterator();
 		for (Map.Entry<String, Movie> entry : movies.entrySet())
 		{
-			for (Person p : entry.getValue().getCast())
+			Movie currentMovie = entry.getValue();
+			for (Person p : currentMovie.getCast())
 			{
-				personList.add(p);
+				castQueue.add(p);
 			}
 			
 			while (it.hasNext()) 
 			{
-				Person currPerson = it.next();
-				for (Person p1 : personList)
+				it.next();
+				for (Person p1 : castQueue)
 				{
-					for (Person p2 : personList)
+					for (Person p2 : castQueue)
 					{
-						Collaboration collabTemp = new Collaboration(p1, p2);
-						coll
-						persons.get(p1.getName()).collabs.add(e)
+						if (p1 == p2) 
+						{
+							continue; 
+						}
+						else
+						{
+							addCollaboration(p1, p2, currentMovie);
+						}
+						
+						
+						
 					}
 				}
+				it.remove();
 			}
 			
 			
 		}
 	}
 	
-	
+	public void addCollaboration(Person p1, Person p2, Movie m) {
+		boolean found = false;
+		for (Collaboration collab : p1.collabs)
+		{
+			if (collab.getActorA() == p2 || collab.getActorB() == p2)
+			{
+				found = true;
+				collab.movies.add(m);
+				break;
+			}
+		}
+		if (!found)
+		{
+			Collaboration collabTemp = new Collaboration(p1, p2);
+			collabTemp.movies.add(m);
+			p1.collabs.add(collabTemp);
+			p2.collabs.add(collabTemp);
+		}
+	}
 }
