@@ -8,6 +8,8 @@
 */
 package pacecorradetti;
 
+import java.util.Arrays;
+
 /**
  * La classe estesa cambia il tipo degli attori utilizzando pacecorradetti.Person invece
  * che movida.commons.Person
@@ -32,6 +34,31 @@ public class Movie extends movida.commons.Movie{
 	public Person getDirector() {
 		return director;
 	}
+
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("getTitle()=");
+		builder.append(getTitle());
+		builder.append(", getDirector()=");
+		builder.append(getDirector());
+		builder.append(", getYear()=");
+		builder.append(getYear());
+		builder.append(", getVotes()=");
+		builder.append(getVotes());
+		builder.append(", Movie [cast=");
+		builder.append(Arrays.toString(cast));
+		builder.append(", getCast()=");
+		builder.append(Arrays.toString(getCast()));
+		builder.append("]");
+		return builder.toString();
+	}
+	
+	/*
+	 * public String toString() { //TODO write to string body StringBuilder sb = new
+	 * StringBuilder(); sb.append("Title: " + title); };
+	 */
 	
 	
 }

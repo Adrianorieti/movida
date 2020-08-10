@@ -28,5 +28,9 @@ public class Collaboration extends movida.commons.Collaboration {
 		return this.actorB;
 	}
 
+	@Override
+	public String toString() {
+		//TODO write to string body
+	}
 	
 }

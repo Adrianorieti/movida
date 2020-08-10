@@ -16,7 +16,18 @@ public class Person extends movida.commons.Person {
 	public Person(String name) {
 		super(name);	
 		collabs = new ArrayList<Collaboration>();
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Person [getName()=");
+		builder.append(getName());
+		builder.append("]");
+		return builder.toString();
 	}	 
+	
+	
 	
  }
 
