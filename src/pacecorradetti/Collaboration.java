@@ -30,7 +30,19 @@ public class Collaboration extends movida.commons.Collaboration {
 
 	@Override
 	public String toString() {
-		//TODO write to string body
+		StringBuilder builder = new StringBuilder();
+		builder.append("Collaboration [actorA=");
+		builder.append(actorA);
+		builder.append(", actorB=");
+		builder.append(actorB);
+		builder.append(", movies=");
+		builder.append(movies);
+		builder.append(", getScore()=");
+		builder.append(getScore());
+		builder.append("]");
+		return builder.toString();
 	}
+
+	
 	
 }
