@@ -19,29 +19,13 @@ public class MovidaGraph {
 	
 	
 	public void populateCollaborations(Map<String, Movie> movies, Map<String, Person> persons) {
-		ArrayList<Person> castQueue = new ArrayList<Person>();
-		//Iterator<Person> it = castQueue.iterator();
 		for (Map.Entry<String, Movie> entry : movies.entrySet())
 		{
 			Movie currentMovie = entry.getValue();
-			for (Person p : currentMovie.getCast())
+
+			for (Person p1 : currentMovie.getCast())
 			{
-				castQueue.add(p);
-			}
-			//TODO find a way to avoid duplicate collabs
-			/*
-			 * while (it.hasNext()) { it.next(); for (Person p1 : castQueue) { for (Person
-			 * p2 : castQueue) { if (p1 == p2) { continue; } else { addCollaboration(p1, p2,
-			 * currentMovie); }
-			 * 
-			 * 
-			 * 
-			 * it.remove(); } } }
-			 */
-			
-			for (Person p1 : castQueue)
-			{
-				for (Person p2 : castQueue)
+				for (Person p2 : currentMovie.getCast())
 				{
 					if (p1 == p2) 
 					{
@@ -51,8 +35,6 @@ public class MovidaGraph {
 					{
 						addCollaboration(p1, p2, currentMovie);
 					}
-			
-			
 				}
 			}
 		}
