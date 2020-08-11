@@ -1,5 +1,8 @@
 package pacecorradetti;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /* Usa ricerca binaria per trovare gli indici O(log n)
  * In caso di ridimensionamento si ha un dimezzamento o duplicazione dello spazio 
@@ -7,29 +10,20 @@ package pacecorradetti;
  */
 
 
-public class ArrayOrdinato<K extends Comparable<K>, E extends Object> extends Map<K, E>{
+public class ArrayOrdinato<K extends Comparable<K>, V extends Object> extends pacecorradetti.Map<K, V>{
 	
-	private Pair array[];
+	private Entry array[];
 	private int lastIndex;
 	
-	protected class Pair {
-		K key;
-		E elem;
-		
-		Pair(K key, E elem) {
-			this.key = key;
-			this.elem = elem;
-		}
-	}
 
 	
 	public ArrayOrdinato(int length) {
-		array =  (Pair[]) new Object[length];
+		array =  (Entry[]) new Object[length];
 		lastIndex = -1;
 	}
 	
 	public ArrayOrdinato() {
-		array = (Pair[]) new Object[1];
+		array = (Entry[]) new Object[1];
 		lastIndex = -1;
 	}
 
@@ -52,11 +46,11 @@ public class ArrayOrdinato<K extends Comparable<K>, E extends Object> extends Ma
 	}
 	
 	@Override
-	public void put(K key, E elem) {
+	public void put(K key, V value) {
 		
 		if (lastIndex == -1) 
 		{
-			array[0] = new Pair(key, elem);
+			array[0] = new Entry(key, value);
 			lastIndex = 0;
 			return;
 		}
@@ -64,7 +58,7 @@ public class ArrayOrdinato<K extends Comparable<K>, E extends Object> extends Ma
 		int i = locationOf(key);
 	
 		if (i <= lastIndex && key.compareTo(array[i].key) == 0)
-			array[i] = new Pair(key, elem);
+			array[i] = new Entry(key, value);
 		else 
 		{
 			if (lastIndex + 1 < array.length)
@@ -72,15 +66,15 @@ public class ArrayOrdinato<K extends Comparable<K>, E extends Object> extends Ma
 				for (int j = lastIndex; j >= i; j--)
 					array[j+1] = array[j];
 				
-				array[i] = new Pair(key, elem);
+				array[i] = new Entry(key, value);
 			}
 			else
 			{
-				Pair temp[] = (Pair[]) new Object[array.length * 2];
+				Entry temp[] = (Entry[]) new Object[array.length * 2];
 				
 				for (int j = 0; j < i; j++ ) 
 					temp[j] = array[j];
-				temp[i] = new Pair(key, elem);
+				temp[i] = new Entry(key, value);
 				for (int j = i; j <= lastIndex; j++)
 					temp[j+1] = array[j];
 				
@@ -99,7 +93,7 @@ public class ArrayOrdinato<K extends Comparable<K>, E extends Object> extends Ma
 		if (i > lastIndex) return;					
 		if (lastIndex - 1 < array.length / 2)
 		{
-			Pair temp[] = (Pair[]) new Object[array.length / 2];
+			Entry temp[] = (Entry[]) new Object[array.length / 2];
 			for (int j = 0; j < i; j++) 
 			{				
 				temp[j] = array[j];
@@ -125,11 +119,11 @@ public class ArrayOrdinato<K extends Comparable<K>, E extends Object> extends Ma
 	}
 	
 	@Override
-	public E search(K key) throws MovidaKeyException {
+	public V search(K key) throws MovidaKeyException {
 		int i = locationOf(key);
 		if (array[i].key.equals(key))
 		{
-			return array[i].elem;			
+			return array[i].value;			
 		}
 		else
 		{
@@ -151,6 +145,16 @@ public class ArrayOrdinato<K extends Comparable<K>, E extends Object> extends Ma
 	public void clear() {
 		for (int i = 0; i < array.length; i++)
 			array[i] = null;
+	}
+
+	@Override
+	public Set<Map<K, V>.Entry> entrySet() {
+		Set<Map<K, V>.Entry> temp = new HashSet<Map<K,V>.Entry>();
+		for (Map<K, V>.Entry e : array)
+		{
+			temp.add(e);
+		}
+		return temp;
 	}
 
 }	
