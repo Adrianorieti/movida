@@ -4,9 +4,11 @@ import java.util.Comparator;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Algorithms {
+	
 	public static <K extends Comparable<K>> void quickSort (K array[]) {
 		quickSort(array, 0, array.length-1);
 	}
+	
 	
 	public static <K extends Comparable<K>> void quickSort (K array[], int low, int high) {
 		if (low >= high) return;
@@ -14,6 +16,7 @@ public class Algorithms {
 		quickSort(array, low, m-1);
 		quickSort(array, m+1, high);
 	}
+	
 	
 	private static <K extends Comparable<K>> int partition(K array[], int low, int high) {
 		int i = low, j = high + 1;
@@ -44,15 +47,12 @@ public class Algorithms {
 		return j;
 	}
 
-	private static final <T> void  swap (T array[], int i, int j) {
-		T temp = array[i];
-		array[i] = array[j];
-		array[j] = temp;
-	}
 
+	
 	public static <K extends Comparable<K>> void quickSort (K array[], Comparator<K> c) {
 		quickSort(array, 0, array.length-1, c);
 	}
+	
 	
 	public static <K extends Comparable<K>> void quickSort (K array[], int low, int high, Comparator<K> c) {
 		if (low >= high) return;
@@ -60,6 +60,7 @@ public class Algorithms {
 		quickSort(array, low, m-1, c);
 		quickSort(array, m+1, high, c);
 	}
+	
 	
 	private static <K extends Comparable<K>> int partition(K array[], int low, int high, Comparator<K> c) {
 		int i = low, j = high + 1;
@@ -91,6 +92,8 @@ public class Algorithms {
 	}
 	
 	
+	
+	
 	public static  <K extends Comparable<K>> void InsertionSort(K A[])
 	{
 		for(int k=1;k <= A.length -1;k++)
@@ -107,6 +110,36 @@ public class Algorithms {
 		}
 	}
 
+	
+	public static  <K extends Comparable<K>> void InsertionSort(K A[], Comparator<K> c)
+	{
+		for(int k=1;k <= A.length -1;k++)
+		{
+			int j=0;
+			K x = A[k]; //salvo k in una variabile perchè dovò sovrascrivere k e lo perderei
+			for( j = 0 ; j < k ;j++) 
+				if(c.compare(A[j],x) > 0) break;  // devo mettere x perchè è un oggetto di tipo comparable(se j > A[k])
+				if(j < k) {
+				for(int t = k; t > j;t--)
+					A[t] = A[t -1];
+				A[j]=x;
+				}
+		}
+	}
+	
+	
+	
+	
+	protected class titleComparator implements Comparator<Movie> {
+
+		@Override
+		public int compare(Movie o1, Movie o2) {
+			return o1.getTitle().compareTo(o2.getTitle());
+		}
+		
+	}
+	
+	
 	protected class votedComparator implements Comparator<Movie> {
 
 		@Override
@@ -116,6 +149,7 @@ public class Algorithms {
 		
 	}
 	
+	
 	protected class recentComparator implements Comparator<Movie> {
 		@Override
 		public int compare(Movie o1, Movie o2) {
@@ -124,4 +158,10 @@ public class Algorithms {
 	}
 	
 	
+	
+	private static final <T> void  swap (T array[], int i, int j) {
+		T temp = array[i];
+		array[i] = array[j];
+		array[j] = temp;
+	}
 }
