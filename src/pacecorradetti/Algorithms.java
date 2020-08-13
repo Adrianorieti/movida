@@ -54,7 +54,7 @@ public class Algorithms {
 	}
 	
 	
-	public static <K extends Comparable<K>> void quickSort (K array[], int low, int high, Comparator<K> c) {
+	private static <K extends Comparable<K>> void quickSort (K array[], int low, int high, Comparator<K> c) {
 		if (low >= high) return;
 		int m = partition(array, low, high, c);
 		quickSort(array, low, m-1, c);
