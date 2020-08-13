@@ -1,21 +1,25 @@
 package pacecorradetti;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 import movida.commons.IMovidaConfig;
 import movida.commons.IMovidaDB;
 import movida.commons.IMovidaSearch;
 import movida.commons.MapImplementation;
+import movida.commons.MovidaFileException;
 import movida.commons.Movie;
 import movida.commons.Person;
 import movida.commons.SortingAlgorithm;
 
 public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
 	//TODO implement last selected
+	LoadFromFile lff;
 	MapImplementation selectedMap = MapImplementation.ArrayOrdinato;
 	SortingAlgorithm selectedAlg = SortingAlgorithm.QuickSort;
 	
-	Map<String, Movie> map;
+	Map<String, Movie> movieMap;
+	Map<String, Person> personMap;
 	
 
 	@Override
@@ -62,7 +66,22 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
 
 	@Override
 	public void loadFromFile(File f) {
-		// TODO Auto-generated method stub
+		LoadFromFile temp = new LoadFromFile();
+		try 
+		{
+			lff.load(f);			
+		}
+		catch (MovidaFileException fe)
+		{
+			fe.printStackTrace();
+			return;
+		} 
+		catch (FileNotFoundException e) 
+		{
+			e.printStackTrace();
+			return;
+		}
+		lff = temp;
 
 	}
 
@@ -74,25 +93,24 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
 
 	@Override
 	public void clear() {
-		map.clear();
+		movieMap.clear();
+		personMap.clear();
 	}
 
 	@Override
 	public int countMovies() {
-		// TODO Auto-generated method stub
-		return 0;
+		return movieMap.length();
 	}
 
 	@Override
 	public int countPeople() {
-		// TODO Auto-generated method stub
-		return 0;
+		return personMap.length();
 	}
 
 	@Override
 	public boolean deleteMovieByTitle(String title) {
 		try {
-			map.delete(title);
+			movieMap.delete(title);
 			return true;
 		} catch (MovidaKeyException e) {
 			e.printStackTrace();
@@ -102,40 +120,48 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
 
 	@Override
 	public Movie getMovieByTitle(String title) {
-		return map.search(title);
+		return movieMap.search(title.trim().toLowerCase());
 	}
 
 	@Override
 	public Person getPersonByName(String name) {
-		// TODO Auto-generated method stub
+		personMap.search(name.trim().toLowerCase());
 		return null;
 	}
 
 	@Override
 	public Movie[] getAllMovies() {
-		// TODO Auto-generated method stub
-		return null;
+		Movie[] arr = new Movie[movieMap.length()];
+		int i = 0;
+		for (Map<String, Movie>.Entry e : movieMap.entrySet()) {
+			arr[i++] = e.getValue();
+		}
+		return arr;
 	}
 
 	@Override
 	public Person[] getAllPeople() {
-		// TODO Auto-generated method stub
-		return null;
+		Person[] arr = new Person[personMap.length()];
+		int i = 0;
+		for (Map<String, Person>.Entry e : personMap.entrySet()) {
+			arr[i++] = e.getValue();
+		}
+		return arr;
 	}
 
 	@Override
 	public boolean setSort(SortingAlgorithm a) {
 		switch (a) {
 		case QuickSort: {
-			//TODO set quicksort
+			selectedAlg = SortingAlgorithm.QuickSort;
 			return true;
 		}
 		case InsertionSort: {
-			//TODO set Insertion sort;
+			selectedAlg = SortingAlgorithm.SelectionSort;
 			return true;
 		}
 		default:
-			//throw new IllegalArgumentException("Unexpected value: " + a);
+			new IllegalArgumentException("Unexpected value: " + a + "; Algorithm unchanged").printStackTrace();
 			return false;
 		}
 	}
@@ -145,15 +171,20 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
 		switch (m) {
 		case ArrayOrdinato: {
 			selectedMap = MapImplementation.ArrayOrdinato;
-			map = new ArrayOrdinato<String, Movie>();
+			movieMap = new ArrayOrdinato<String, Movie>();
+			personMap = new ArrayOrdinato<String, Person>();
 			return true;
 		}
 		case HashIndirizzamentoAperto: {
-			//TODO selectedMap = 
+			/*
+			 * selectedMap = MapImplementation.HashIndirizzamentoAperto; movieMap = new
+			 * ArrayOrdinato<String, Movie>(); personMap = new ArrayOrdinato<String,
+			 * Person>();
+			 */
 			return true;
 		}
 		default:
-			//throw new IllegalArgumentException("Unexpected value: " + m);
+			new IllegalArgumentException("Unexpected value: " + "; Map unchanged");
 			return false;
 		}
 	}
