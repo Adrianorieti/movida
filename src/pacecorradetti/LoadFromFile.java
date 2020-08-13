@@ -4,9 +4,10 @@ import java.util.Scanner;
 
 import movida.commons.MovidaFileException;
 
+
 import java.util.List;
 import java.util.ArrayList;
-import java.util.HashMap;
+//import java.util.HashMap;
 import java.io.File;
 import java.io.FileNotFoundException;
 
@@ -16,9 +17,10 @@ import java.io.FileNotFoundException;
 
 
 public class LoadFromFile {
-	HashMap<String, Person> personMap;
-	HashMap<String, Movie> movieMap;
-	
+//	private HashMap<String, Person> personMap;
+//	private HashMap<String, Movie> movieMap;
+	private Map<String, Person> personMap;
+	private Map<String, Movie> movieMap;
 	public void load(File f) throws MovidaFileException, FileNotFoundException {
 
 		Scanner scan = new Scanner(f);
@@ -29,8 +31,10 @@ public class LoadFromFile {
 		Person director;
 		int year = 0;
 		int votes = 0;
-		/* HashMap<String, Person> */personMap = new HashMap<String, Person>();
-		/* HashMap<String, Movie> */movieMap = new HashMap<String, Movie>();
+//		/* HashMap<String, Person> */personMap = new HashMap<String, Person>();
+//		/* HashMap<String, Movie> */movieMap = new HashMap<String, Movie>();
+		personMap = new ArrayOrdinato<String, Person>();
+		movieMap = new ArrayOrdinato<String, Movie>();
 		List<Person> cast;
 		Person personToAdd = null;
 
@@ -52,9 +56,8 @@ public class LoadFromFile {
 			line = scan.nextLine();
 			String[] names = formatLine(line).split(",");
 
-			for (int i = 0; i < names.length; i++)  		// aggiunge all'array Person[] tutte le nuove persone, riempie il cast
+			for (int i = 0; i < names.length; i++)  		
 			{
-				// cast = addPerson(cast,new Person(names[i].trim())); //se fosse un array
 				personToAdd = new Person(names[i].trim());
 				cast.add(personToAdd); 
 				personMap.putIfAbsent(personToAdd.getName(), personToAdd);
@@ -82,7 +85,13 @@ public class LoadFromFile {
 		return line.trim();
 	}
 
+	public Map<String, Person> getPersonMap() {
+		return personMap;
+	}
 
+	public Map<String, Movie> getMovieMap() {
+		return movieMap;
+	}
 
 	/*
 	 * private static Person[] addPerson(Person[] persons, Person newperson) {

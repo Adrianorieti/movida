@@ -1,5 +1,7 @@
 package pacecorradetti;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,18 +14,18 @@ import java.util.Set;
 
 public class ArrayOrdinato<K extends Comparable<K>, V extends Object> extends pacecorradetti.Map<K, V>{
 	
-	private Entry array[];
+	private Entry[] array;
 	private int lastIndex;
 	
 
 	
 	public ArrayOrdinato(int length) {
-		array =  (Entry[]) new Object[length];
+		array = (Entry[]) Array.newInstance(Entry.class , length);
 		lastIndex = -1;
 	}
 	
 	public ArrayOrdinato() {
-		array = (Entry[]) new Object[1];
+		array = (Entry[]) Array.newInstance(Entry.class , 1);
 		lastIndex = -1;
 	}
 
@@ -70,7 +72,7 @@ public class ArrayOrdinato<K extends Comparable<K>, V extends Object> extends pa
 			}
 			else
 			{
-				Entry temp[] = (Entry[]) new Object[array.length * 2];
+				Entry temp[] = (Entry[]) Array.newInstance(Entry.class , array.length * 2);
 				
 				for (int j = 0; j < i; j++ ) 
 					temp[j] = array[j];
@@ -93,7 +95,7 @@ public class ArrayOrdinato<K extends Comparable<K>, V extends Object> extends pa
 		if (i > lastIndex) return;					
 		if (lastIndex - 1 < array.length / 2)
 		{
-			Entry temp[] = (Entry[]) new Object[array.length / 2];
+			Entry temp[] = (Entry[]) Array.newInstance(Entry.class , array.length / 2);
 			for (int j = 0; j < i; j++) 
 			{				
 				temp[j] = array[j];
@@ -131,8 +133,9 @@ public class ArrayOrdinato<K extends Comparable<K>, V extends Object> extends pa
 		}
 	}
 
+	@Override
 	public int length() {
-		return array.length;
+		return lastIndex + 1;
 	}
 	
 	public boolean isEmpty() {
@@ -150,11 +153,65 @@ public class ArrayOrdinato<K extends Comparable<K>, V extends Object> extends pa
 	@Override
 	public Set<Map<K, V>.Entry> entrySet() {
 		Set<Map<K, V>.Entry> temp = new HashSet<Map<K,V>.Entry>();
-		for (Map<K, V>.Entry e : array)
+		for (int i = 0; i < lastIndex; i++)
 		{
-			temp.add(e);
+			temp.add(array[i]);
 		}
 		return temp;
 	}
+	
+	@Override
+	public void putIfAbsent(K key, V value) {
+		if (lastIndex == -1) 
+		{
+			array[0] = new Entry(key, value);
+			lastIndex = 0;
+			return;
+		}
+		
+		int i = locationOf(key);
+		if (i <= lastIndex && array[i].getKey() == key)
+		{
+			return;
+		}
+		else
+		{
+			if (lastIndex + 1 < array.length)
+			{
+				for (int j = lastIndex; j >= i; j--)
+					array[j+1] = array[j];
+				
+				array[i] = new Entry(key, value);
+			}
+			else
+			{
+				Entry temp[] = (Entry[]) Array.newInstance(Entry.class , array.length * 2);
+				
+				for (int j = 0; j < i; j++ ) 
+					temp[j] = array[j];
+				temp[i] = new Entry(key, value);
+				for (int j = i; j <= lastIndex; j++)
+					temp[j+1] = array[j];
+				
+				array = temp;
+			}
+			lastIndex++;
+		}
+		
+		
+			
+		
+	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("ArrayOrdinato [array=");
+		builder.append(Arrays.toString(array));
+		builder.append("]");
+		return builder.toString();
+	}
+
+	
+	
 }	
