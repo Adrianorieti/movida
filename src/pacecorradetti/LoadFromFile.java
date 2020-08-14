@@ -4,23 +4,23 @@ import java.util.Scanner;
 
 import movida.commons.MovidaFileException;
 
-
 import java.util.List;
 import java.util.ArrayList;
-//import java.util.HashMap;
+import java.util.HashMap;
 import java.io.File;
 import java.io.FileNotFoundException;
-
+import pacecorradetti.Map;
 
 
 //TODO replace util.map with pacecorradetti.map
 
 
 public class LoadFromFile {
-//	private HashMap<String, Person> personMap;
-//	private HashMap<String, Movie> movieMap;
-	private Map<String, Person> personMap;
-	private Map<String, Movie> movieMap;
+	HashMap<String, Person> personMap;
+	HashMap<String, Movie> movieMap;
+	//HashIndirizzamentoAperto<String,Movie> movieMap2;
+	HashIndirizzamentoAperto<String, Person> personMap2;
+	
 	public void load(File f) throws MovidaFileException, FileNotFoundException {
 
 		Scanner scan = new Scanner(f);
@@ -31,10 +31,10 @@ public class LoadFromFile {
 		Person director;
 		int year = 0;
 		int votes = 0;
-//		/* HashMap<String, Person> */personMap = new HashMap<String, Person>();
-//		/* HashMap<String, Movie> */movieMap = new HashMap<String, Movie>();
-		personMap = new ArrayOrdinato<String, Person>();
-		movieMap = new ArrayOrdinato<String, Movie>();
+		/* HashMap<String, Person> */personMap = new HashMap<String, Person>();
+		/* HashMap<String, Movie> */movieMap = new HashMap<String, Movie>();
+		//movieMap2 = new HashIndirizzamentoAperto<String, Movie>(53);
+		personMap2 = new  HashIndirizzamentoAperto<String, Person>(53);
 		List<Person> cast;
 		Person personToAdd = null;
 
@@ -56,11 +56,14 @@ public class LoadFromFile {
 			line = scan.nextLine();
 			String[] names = formatLine(line).split(",");
 
-			for (int i = 0; i < names.length; i++)  		
+			for (int i = 0; i < names.length; i++)  		// aggiunge all'array Person[] tutte le nuove persone, riempie il cast
 			{
 				personToAdd = new Person(names[i].trim());
 				cast.add(personToAdd); 
-				personMap.putIfAbsent(personToAdd.getName(), personToAdd);
+				//personMap.putIfAbsent(personToAdd.getName(), personToAdd);
+				personMap2.putIfAbsent(personToAdd.getName(), personToAdd);
+				personMap2.printHash();
+				System.out.print("\n");
 				
 			}
 
@@ -70,6 +73,8 @@ public class LoadFromFile {
 			Person[] castArray = cast.toArray(new Person[0]);
 			Movie movieToAdd = new Movie(title, year, votes, castArray, director);
 			movieMap.putIfAbsent(movieToAdd.getTitle(), movieToAdd);
+			//movieMap2.putIfAbsent(movieToAdd.getTitle(), movieToAdd);
+			//movieMap2.printHash();
 			
 			if (scan.hasNextLine())
 			{
@@ -78,6 +83,7 @@ public class LoadFromFile {
 		}
 		scan.close();	
 	}
+	
 
 	private String formatLine(String line) {
 		int index = line.indexOf(':');
@@ -85,13 +91,7 @@ public class LoadFromFile {
 		return line.trim();
 	}
 
-	public Map<String, Person> getPersonMap() {
-		return personMap;
-	}
 
-	public Map<String, Movie> getMovieMap() {
-		return movieMap;
-	}
 
 	/*
 	 * private static Person[] addPerson(Person[] persons, Person newperson) {

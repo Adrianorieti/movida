@@ -1,6 +1,6 @@
 package pacecorradetti;
 
-import java.security.KeyStore.Entry;
+import java.lang.reflect.Array;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,13 +13,13 @@ public class HashIndirizzamentoAperto<K extends Comparable<K>,V extends Object> 
 	
 	public HashIndirizzamentoAperto(int l)
 	{
-		this.length = l;
-		m =   (Entry[]) new Object[length];
+		this.length = Math.abs(l);
+		m =  ((Entry[]) Array.newInstance(Entry.class , length));
 		for(int i =0;i < m.length;i++) 
 		{
 			m[i] = null;
 		}
-		this.deleted = new Object();
+		HashIndirizzamentoAperto.deleted = new Object();
 	}
 	public void printHash()
 	{
@@ -34,13 +34,13 @@ public class HashIndirizzamentoAperto<K extends Comparable<K>,V extends Object> 
 	@Override
 	public V search(K key) throws MovidaKeyException
 	{
-		int hash = key.hashCode() % length;
+		int hash = Math.abs(key.hashCode() % length);
 		if(m[hash].key.equals(key)) return (V) (m[hash].value);
 		else if(m[hash] == null) return null;
 		else {
 			for(int i=0;i < m.length;i++) 
 			{
-				int hash2 = hash + (i * (key.hashCode() + 1)) % length ;
+				int hash2 =  Math.abs((hash + (i * ( key.hashCode() + 1))) % length) ;
 				if(m[hash2].key.equals(key)) 
 					return (V) m[hash2].value;
 			}
@@ -51,7 +51,7 @@ public class HashIndirizzamentoAperto<K extends Comparable<K>,V extends Object> 
 	@Override
 	public void delete(K key) throws MovidaKeyException
 	{
-		int hash = key.hashCode() % length;
+		int hash = Math.abs(key.hashCode() % length);
 		if(m[hash].key.equals(key))
 		{ 
 			m[hash].value = (V) deleted;
@@ -61,7 +61,7 @@ public class HashIndirizzamentoAperto<K extends Comparable<K>,V extends Object> 
 		{
 			for(int i=0;i < m.length;i++) 
 			{
-				int hash2 = hash + (i * (key.hashCode() + 1)) % length ;
+				int hash2 =  Math.abs((hash + (i * ( key.hashCode() + 1))) % length) ;
 				if((m[hash2].key.equals(key)))
 				{
 					m[hash2].value = (V) deleted;
@@ -73,27 +73,24 @@ public class HashIndirizzamentoAperto<K extends Comparable<K>,V extends Object> 
 	@Override
 	public void put(K key,V value) 
 	{
-		int hash = key.hashCode() % length;
-		boolean inserted = false;
+		int hash =  Math.abs(key.hashCode() % length);
 		if((m[hash] == null) || (m[hash] == deleted))
 		{
 			m[hash] = new Entry(key,value) ;
-			inserted = true;
+			
 		}
 		else if(m[hash].key == key)
 		{
 			m[hash].value = value; // sovrascrive l'oggetto
-			inserted = true;
 		}
 		else 
 		{
 			for(int i=0;i < m.length;i++)
 			{
-				int hash2 = hash + (i * (key.hashCode() + 1)) % length ;
+				int hash2 = Math.abs((hash + (i * ( key.hashCode() + 1))) % length) ;
 				if((m[hash2] == null) || ((m[hash2] == deleted)))
 				{
 					m[hash2] = new Entry(key,value);
-					inserted = true;
 					break;
 				}
 			}
@@ -118,5 +115,36 @@ public class HashIndirizzamentoAperto<K extends Comparable<K>,V extends Object> 
 			temp.add(e);
 		}
 		return temp;
+	}
+	@Override
+	public void putIfAbsent(K key, V value) {
+		int hash =  Math.abs(key.hashCode() % length);
+		if((m[hash] == null) || (m[hash] == deleted))
+		{
+			m[hash] = new Entry(key,value) ;
+			
+		}
+		else if(m[hash].key == key)
+		{
+			return; 
+		}
+		else 
+		{
+			for(int i=0;i < m.length;i++)
+			{
+				int hash2 = Math.abs((hash + (i * ( key.hashCode() + 1))) % length) ;
+				if((m[hash2] == null) || ((m[hash2] == deleted)))
+				{
+					m[hash2] = new Entry(key,value);
+					break;
+				}
+			}
+			
+		}
+		
+	}
+	@Override
+	public int length() {
+		return m.length;
 	}
 }
