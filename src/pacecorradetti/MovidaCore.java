@@ -8,8 +8,6 @@ import movida.commons.IMovidaDB;
 import movida.commons.IMovidaSearch;
 import movida.commons.MapImplementation;
 import movida.commons.MovidaFileException;
-import movida.commons.Movie;
-import movida.commons.Person;
 import movida.commons.SortingAlgorithm;
 
 public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
@@ -67,9 +65,10 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
 	@Override
 	public void loadFromFile(File f) {
 		LoadFromFile temp = new LoadFromFile();
+		temp.setMap(selectedMap);
 		try 
 		{
-			lff.load(f);			
+			temp.load(f);			
 		}
 		catch (MovidaFileException fe)
 		{
@@ -82,7 +81,9 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
 			return;
 		}
 		lff = temp;
-
+		movieMap = lff.getMovieMap();
+		personMap = lff.getPersonMap();
+		return;
 	}
 
 	@Override
@@ -133,7 +134,8 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
 	public Movie[] getAllMovies() {
 		Movie[] arr = new Movie[movieMap.length()];
 		int i = 0;
-		for (Map<String, Movie>.Entry e : movieMap.entrySet()) {
+		for (Map<String, Movie>.Entry e : movieMap.entrySet()) 
+		{
 			arr[i++] = e.getValue();
 		}
 		return arr;
@@ -143,7 +145,8 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
 	public Person[] getAllPeople() {
 		Person[] arr = new Person[personMap.length()];
 		int i = 0;
-		for (Map<String, Person>.Entry e : personMap.entrySet()) {
+		for (Map<String, Person>.Entry e : personMap.entrySet()) 
+		{
 			arr[i++] = e.getValue();
 		}
 		return arr;
@@ -151,41 +154,48 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
 
 	@Override
 	public boolean setSort(SortingAlgorithm a) {
-		switch (a) {
-		case QuickSort: {
-			selectedAlg = SortingAlgorithm.QuickSort;
-			return true;
-		}
-		case InsertionSort: {
-			selectedAlg = SortingAlgorithm.SelectionSort;
-			return true;
-		}
-		default:
-			new IllegalArgumentException("Unexpected value: " + a + "; Algorithm unchanged").printStackTrace();
-			return false;
+		switch (a) 
+		{
+			case QuickSort: 
+			{
+				selectedAlg = SortingAlgorithm.QuickSort;
+				return true;
+			}
+			case InsertionSort: 
+			{
+				selectedAlg = SortingAlgorithm.SelectionSort;
+				return true;
+			}
+			default:
+				new IllegalArgumentException("Unexpected value: " + a + "; Algorithm unchanged").printStackTrace();
+				return false;
 		}
 	}
 
 	@Override
 	public boolean setMap(MapImplementation m) {
-		switch (m) {
-		case ArrayOrdinato: {
-			selectedMap = MapImplementation.ArrayOrdinato;
-			movieMap = new ArrayOrdinato<String, Movie>();
-			personMap = new ArrayOrdinato<String, Person>();
-			return true;
-		}
-		case HashIndirizzamentoAperto: {
-			/*
-			 * selectedMap = MapImplementation.HashIndirizzamentoAperto; movieMap = new
-			 * ArrayOrdinato<String, Movie>(); personMap = new ArrayOrdinato<String,
-			 * Person>();
-			 */
-			return true;
-		}
-		default:
-			new IllegalArgumentException("Unexpected value: " + "; Map unchanged");
-			return false;
+		switch (m) 
+		{
+			case ArrayOrdinato: 
+			{
+				selectedMap = MapImplementation.ArrayOrdinato;
+				movieMap = new ArrayOrdinato<String, Movie>();
+				personMap = new ArrayOrdinato<String, Person>();
+				lff.setMap(MapImplementation.ArrayOrdinato);
+				return true;
+			}
+			case HashIndirizzamentoAperto: 
+			{
+				/*
+				 * selectedMap = MapImplementation.HashIndirizzamentoAperto; movieMap = new
+				 * ArrayOrdinato<String, Movie>(); personMap = new ArrayOrdinato<String,
+				 * Person>();
+				 */
+				return true;
+			}
+			default:
+				new IllegalArgumentException("Unexpected value: " + "; Map unchanged");
+				return false;
 		}
 	}
 
