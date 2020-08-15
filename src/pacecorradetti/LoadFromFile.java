@@ -44,7 +44,8 @@ public class LoadFromFile {
 			}
 			case HashIndirizzamentoAperto : 
 			{
-				//TODO add selection
+				personMap = new HashIndirizzamentoAperto<String, Person>(313);
+				movieMap = new HashIndirizzamentoAperto<String, Person>(313);
 				break;
 			}
 			default:

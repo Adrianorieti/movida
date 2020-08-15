@@ -2,6 +2,8 @@ package pacecorradetti;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -125,9 +127,41 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
 
 	@Override
 	public void saveToFile(File f) {
-		// TODO Auto-generated method stub
+		
+		 try 
+		 {
+			FileWriter save = new FileWriter(f);
+			for (Map<String, Movie>.Entry e : movieMap.entrySet())
+			{
+				save.append("Title:" + "\t" + e.value.getTitle() + "\n");
+				
+				save.append("Year:" +"\t" + e.value.getYear() + "\n");
+				
+				save.append("Director:" + "\t" + e.value.getDirector().getName() + "\n");
+				
+				Person cast[] =  e.value.getCast();
+				save.append("Cast:" + "\t");
+				for(int i=0;i < cast.length;i++)
+				  {
+					if(i == cast.length-1) save.append(cast[i].getName() +"\n"); //l'ultimo elemento non ha la virgola 
+					else save.append(cast[i].getName() +"," +"\t");
+				  }
+					
+				save.append("Votes" + "\t" + e.value.getVotes() + "\n");
+				save.append("\n");
+			
+			}
+			
+			save.close();
+		 } 
+		 catch (IOException e) 
+		 {
+			System.out.println("Impossibile aprire il file.");
+			e.printStackTrace();
+		 }
+	  }
 
-	}
+	
 
 	@Override
 	public void clear() {
@@ -223,11 +257,11 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
 			}
 			case HashIndirizzamentoAperto: 
 			{
-				/*
-				 * selectedMap = MapImplementation.HashIndirizzamentoAperto; movieMap = new
-				 * ArrayOrdinato<String, Movie>(); personMap = new ArrayOrdinato<String,
-				 * Person>();
-				 */
+				
+				 selectedMap = MapImplementation.HashIndirizzamentoAperto;
+				   movieMap = new HashIndirizzamentoAperto<String, Movie>(313);
+				   personMap = new HashIndirizzamentoAperto<String, Person>(313);
+				   lff.setMap(MapImplementation.HashIndirizzamentoAperto);
 				return true;
 			}
 			default:
