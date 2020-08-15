@@ -10,7 +10,7 @@ import java.util.ArrayList;
 //import java.util.HashMap;
 import java.io.File;
 import java.io.FileNotFoundException;
-
+import movida.commons.MapImplementation;
 
 
 //TODO replace util.map with pacecorradetti.map
@@ -19,6 +19,7 @@ import java.io.FileNotFoundException;
 public class LoadFromFile {
 //	private HashMap<String, Person> personMap;
 //	private HashMap<String, Movie> movieMap;
+	private MapImplementation selectedMap;
 	private Map<String, Person> personMap;
 	private Map<String, Movie> movieMap;
 	public void load(File f) throws MovidaFileException, FileNotFoundException {
@@ -31,10 +32,26 @@ public class LoadFromFile {
 		Person director;
 		int year = 0;
 		int votes = 0;
-//		/* HashMap<String, Person> */personMap = new HashMap<String, Person>();
-//		/* HashMap<String, Movie> */movieMap = new HashMap<String, Movie>();
-		personMap = new ArrayOrdinato<String, Person>();
-		movieMap = new ArrayOrdinato<String, Movie>();
+		
+		
+		switch (selectedMap) 
+		{
+			case ArrayOrdinato: 
+			{
+				personMap = new ArrayOrdinato<String, Person>();
+				movieMap = new ArrayOrdinato<String, Movie>();
+				break;
+			}
+			case HashIndirizzamentoAperto : 
+			{
+				//TODO add selection
+				break;
+			}
+			default:
+				new IllegalArgumentException("Unexpected value: " + selectedMap).printStackTrace();
+		}
+		
+		
 		List<Person> cast;
 		Person personToAdd = null;
 
@@ -58,7 +75,7 @@ public class LoadFromFile {
 
 			for (int i = 0; i < names.length; i++)  		
 			{
-				personToAdd = new Person(names[i].trim());
+				personToAdd = new Person(names[i].trim().toLowerCase());
 				cast.add(personToAdd); 
 				personMap.putIfAbsent(personToAdd.getName(), personToAdd);
 				
@@ -82,7 +99,7 @@ public class LoadFromFile {
 	private String formatLine(String line) {
 		int index = line.indexOf(':');
 		line = line.substring(index + 1, line.length());
-		return line.trim();
+		return line.trim().toLowerCase();
 	}
 
 	public Map<String, Person> getPersonMap() {
@@ -93,11 +110,7 @@ public class LoadFromFile {
 		return movieMap;
 	}
 
-	/*
-	 * private static Person[] addPerson(Person[] persons, Person newperson) {
-	 * Person[] persons2 = new Person[persons.length + 1]; System.arraycopy(persons,
-	 * 0, persons2, 0, persons.length); persons2[persons2.length - 1] = newperson;
-	 * 
-	 * return persons2; }
-	 */
+	public void setMap (MapImplementation m) {
+		selectedMap = m;
+	}
 }
