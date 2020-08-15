@@ -2,6 +2,8 @@ package pacecorradetti;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import movida.commons.IMovidaConfig;
 import movida.commons.IMovidaDB;
@@ -15,34 +17,69 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
 	LoadFromFile lff;
 	MapImplementation selectedMap = MapImplementation.ArrayOrdinato;
 	SortingAlgorithm selectedAlg = SortingAlgorithm.QuickSort;
-	
 	Map<String, Movie> movieMap;
 	Map<String, Person> personMap;
+	Movie[] movieArr;
+	Person[] personArr;
 	
 
 	@Override
 	public Movie[] searchMoviesByTitle(String title) {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Movie> l = new ArrayList<Movie>();
+		for (Map<String, Movie>.Entry e : movieMap.entrySet())
+		{
+			if (e.key.contains(title))
+			{
+				l.add(e.getValue());
+			}
+		}
+		return l.toArray(new Movie[l.size()]);
 	}
 
 	@Override
 	public Movie[] searchMoviesInYear(Integer year) {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Movie> l = new ArrayList<Movie>();
+		for (Map<String, Movie>.Entry e : movieMap.entrySet())
+		{
+			if (e.getValue().getYear().equals(year) )
+			{
+				l.add(e.getValue());
+			}
+		}
+		return l.toArray(new Movie[l.size()]);
 	}
 
 	@Override
 	public Movie[] searchMoviesDirectedBy(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Movie> l = new ArrayList<Movie>();
+		for (Map<String, Movie>.Entry e : movieMap.entrySet())
+		{
+			if (e.getValue().getDirector().getName().equals(name.trim().toLowerCase()) )
+			{
+				l.add(e.getValue());
+			}
+		}
+		return l.toArray(new Movie[l.size()]);
 	}
 
 	@Override
 	public Movie[] searchMoviesStarredBy(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Movie> l = new ArrayList<Movie>();
+		for (Map<String, Movie>.Entry e : movieMap.entrySet())
+		{
+			Movie m = e.getValue();
+			for (Person p : m.getCast())
+			{
+				if (p.getName().equals(name.trim().toLowerCase()))
+				{
+					l.add(e.getValue());
+					break;
+				}
+			}
+		}
+		return l.toArray(new Movie[l.size()]);
 	}
+
 
 	@Override
 	public Movie[] searchMostVotedMovies(Integer N) {
