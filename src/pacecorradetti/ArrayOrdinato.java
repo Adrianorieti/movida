@@ -153,7 +153,7 @@ public class ArrayOrdinato<K extends Comparable<K>, V extends Object> extends pa
 	@Override
 	public Set<Map<K, V>.Entry> entrySet() {
 		Set<Map<K, V>.Entry> temp = new HashSet<Map<K,V>.Entry>();
-		for (int i = 0; i < lastIndex; i++)
+		for (int i = 0; i < length(); i++)
 		{
 			temp.add(array[i]);
 		}
