@@ -21,8 +21,6 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
 	SortingAlgorithm selectedAlg = SortingAlgorithm.QuickSort;
 	Map<String, Movie> movieMap;
 	Map<String, Person> personMap;
-	Movie[] movieArr;
-	Person[] personArr;
 	
 
 	@Override
@@ -85,20 +83,31 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
 
 	@Override
 	public Movie[] searchMostVotedMovies(Integer N) {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Movie> movieList = movieMap.valueList();
+		Movie[] movieArr = movieList.toArray(new Movie[movieList.size()]);
+		Algorithms.quickSort(movieArr, Algorithms.VOTES.reversed());
+		Movie[] toReturn = new Movie[N];
+		for (int i = 0; i < N; i++) {
+			toReturn[i] = movieArr[i];
+		}
+		return toReturn;
 	}
 
 	@Override
 	public Movie[] searchMostRecentMovies(Integer N) {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Movie> movieList = movieMap.valueList();
+		Movie[] movieArr = movieList.toArray(new Movie[movieList.size()]);
+		Algorithms.quickSort(movieArr, Algorithms.RECENT.reversed());
+		Movie[] toReturn = new Movie[N];
+		for (int i = 0; i < N; i++) {
+			toReturn[i] = movieArr[i];
+		}
+		return toReturn;
 	}
 
 	@Override
 	public Person[] searchMostActiveActors(Integer N) {
-		// TODO Auto-generated method stub
-		return null;
+		//TODO create new comparator
 	}
 
 	@Override
