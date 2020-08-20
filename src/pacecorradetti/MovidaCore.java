@@ -272,18 +272,18 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
 			case ArrayOrdinato: 
 			{
 				selectedMap = MapImplementation.ArrayOrdinato;
-				movieMap = new ArrayOrdinato<String, Movie>();
-				personMap = new ArrayOrdinato<String, Person>();
-				lff.setMap(MapImplementation.ArrayOrdinato);
+				//movieMap = new ArrayOrdinato<String, Movie>();
+				//personMap = new ArrayOrdinato<String, Person>();
+				//lff.setMap(MapImplementation.ArrayOrdinato);
 				return true;
 			}
 			case HashIndirizzamentoAperto: 
 			{
 				
 				selectedMap = MapImplementation.HashIndirizzamentoAperto;
-				movieMap = new HashIndirizzamentoAperto<String, Movie>(313);
-				personMap = new HashIndirizzamentoAperto<String, Person>(313);
-				lff.setMap(MapImplementation.HashIndirizzamentoAperto);
+				//movieMap = new HashIndirizzamentoAperto<String, Movie>(313);
+				//personMap = new HashIndirizzamentoAperto<String, Person>(313);
+				//lff.setMap(MapImplementation.HashIndirizzamentoAperto);
 				return true;
 			}
 			default:
