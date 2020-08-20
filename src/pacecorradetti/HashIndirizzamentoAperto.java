@@ -2,6 +2,7 @@ package pacecorradetti;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -159,5 +160,13 @@ public class HashIndirizzamentoAperto<K extends Comparable<K>,V extends Object> 
 	@Override
 	public int length() {
 		return m.length;
+	}
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("HashIndirizzamentoAperto [HashTable=");
+		builder.append(Arrays.toString(m));
+		builder.append("]");
+		return builder.toString();
 	}
 }
