@@ -16,6 +16,7 @@ import movida.commons.IMovidaDB;
 import movida.commons.IMovidaSearch;
 import movida.commons.MapImplementation;
 import movida.commons.MovidaFileException;
+import movida.commons.Person;
 import movida.commons.SortingAlgorithm;
 
 public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
@@ -290,6 +291,11 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
 				new IllegalArgumentException("Unexpected value: " + "; Map unchanged");
 				return false;
 		}
+	}
+	
+	@Override
+	public Person[] getDirectCollaboratorsOf(pacecorradetti.Person actor){
+		return actor.getCollabs();
 	}
 
 }
