@@ -45,7 +45,7 @@ public class LoadFromFile {
 			case HashIndirizzamentoAperto : 
 			{
 				personMap = new HashIndirizzamentoAperto<String, Person>(313);
-				movieMap = new HashIndirizzamentoAperto<String, Person>(313);
+				movieMap = new HashIndirizzamentoAperto<String, Movie>(313);
 				break;
 			}
 			default:
@@ -68,7 +68,7 @@ public class LoadFromFile {
 			
 			line = scan.nextLine();
 			directorName = formatLine(line);	
-			director = new Person(directorName);
+			director = new Person(directorName, PersonRole.director);
 			personMap.putIfAbsent(directorName, director);
 			
 			line = scan.nextLine();
@@ -76,10 +76,10 @@ public class LoadFromFile {
 
 			for (int i = 0; i < names.length; i++)  		
 			{
-				personToAdd = new Person(names[i].trim().toLowerCase());
-				cast.add(personToAdd); 
+				String name = names[i].trim().toLowerCase();
+				personToAdd = new Person(name, PersonRole.actor);
 				personMap.putIfAbsent(personToAdd.getName(), personToAdd);
-				
+				cast.add(personMap.search(name)); 	
 			}
 
 			line = scan.nextLine();
@@ -87,6 +87,13 @@ public class LoadFromFile {
 
 			Person[] castArray = cast.toArray(new Person[0]);
 			Movie movieToAdd = new Movie(title, year, votes, castArray, director);
+			
+			//popola lista di film per ogni attore
+			for (Person p : movieToAdd.getCast())
+			{
+				p.movies.add(movieToAdd);
+			}
+			
 			movieMap.putIfAbsent(movieToAdd.getTitle(), movieToAdd);
 			
 			if (scan.hasNextLine())
