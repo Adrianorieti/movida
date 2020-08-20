@@ -1,6 +1,7 @@
 package pacecorradetti;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -116,6 +117,18 @@ public class HashIndirizzamentoAperto<K extends Comparable<K>,V extends Object> 
 		}
 		return temp;
 	}
+	
+	
+	public ArrayList<V> valueList() {
+		ArrayList<V> temp = new ArrayList<V>();
+		for (int i = 0; i < length(); i++)
+		{
+			temp.add(m[i].getValue());
+		}
+		return temp;
+	}
+	
+	
 	@Override
 	public void putIfAbsent(K key, V value) {
 		int hash =  Math.abs(key.hashCode() % length);

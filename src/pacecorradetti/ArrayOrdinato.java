@@ -1,6 +1,7 @@
 package pacecorradetti;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -159,6 +160,17 @@ public class ArrayOrdinato<K extends Comparable<K>, V extends Object> extends pa
 		}
 		return temp;
 	}
+	
+	
+	public ArrayList<V> valueList() {
+		ArrayList<V> temp = new ArrayList<V>();
+		for (int i = 0; i < length(); i++)
+		{
+			temp.add(array[i].getValue());
+		}
+		return temp;
+	}
+ 	
 	
 	@Override
 	public void putIfAbsent(K key, V value) {
