@@ -11,11 +11,15 @@ import java.util.ArrayList;
 
 public class Person extends movida.commons.Person {
 	
-	ArrayList<Collaboration> collabs;
+	protected PersonRole role;
 	
-	public Person(String name) {
+	ArrayList<Collaboration> collabs;
+	ArrayList<Movie> movies;
+	
+	public Person(String name, PersonRole role) {
 		super(name);	
 		collabs = new ArrayList<Collaboration>();
+		this.role = role;
 	}
 
 	@Override
@@ -25,7 +29,20 @@ public class Person extends movida.commons.Person {
 		builder.append(getName());
 		builder.append("]");
 		return builder.toString();
+	}
+
+	public PersonRole getRole() {
+		return role;
+	}
+
+	public ArrayList<Movie> getMovies() {
+		return movies;
 	}	 
+	
+	
+	
+	
+	
 	
 	
 	
