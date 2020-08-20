@@ -1,5 +1,6 @@
 package pacecorradetti;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 abstract class Map<K extends Comparable<K>, V extends Object> {
@@ -36,6 +37,9 @@ abstract class Map<K extends Comparable<K>, V extends Object> {
 	
 	
 	abstract public Set<Entry> entrySet();
+	
+	
+	abstract public ArrayList<V> valueList();
 
 
 	public abstract void putIfAbsent(K key, V value);
