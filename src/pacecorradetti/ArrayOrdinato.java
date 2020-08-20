@@ -182,7 +182,7 @@ public class ArrayOrdinato<K extends Comparable<K>, V extends Object> extends pa
 		}
 		
 		int i = locationOf(key);
-		if (i <= lastIndex && array[i].getKey() == key)
+		if (i <= lastIndex && array[i].getKey().equals(key))
 		{
 			return;
 		}

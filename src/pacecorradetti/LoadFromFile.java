@@ -70,6 +70,7 @@ public class LoadFromFile {
 			directorName = formatLine(line);	
 			director = new Person(directorName, PersonRole.director);
 			personMap.putIfAbsent(directorName, director);
+			director = personMap.search(directorName);
 			
 			line = scan.nextLine();
 			String[] names = formatLine(line).split(",");
@@ -78,14 +79,14 @@ public class LoadFromFile {
 			{
 				String name = names[i].trim().toLowerCase();
 				personToAdd = new Person(name, PersonRole.actor);
-				personMap.putIfAbsent(personToAdd.getName(), personToAdd);
+				personMap.putIfAbsent(name, personToAdd);
 				cast.add(personMap.search(name)); 	
 			}
 
 			line = scan.nextLine();
 			votes = Integer.parseInt(formatLine(line));
 
-			Person[] castArray = cast.toArray(new Person[0]);
+			Person[] castArray = cast.toArray(new Person[cast.size()]);
 			Movie movieToAdd = new Movie(title, year, votes, castArray, director);
 			
 			//popola lista di film per ogni attore
