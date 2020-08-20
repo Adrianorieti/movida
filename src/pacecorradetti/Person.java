@@ -19,6 +19,7 @@ public class Person extends movida.commons.Person {
 	public Person(String name, PersonRole role) {
 		super(name);	
 		collabs = new ArrayList<Collaboration>();
+		movies = new ArrayList<Movie>();
 		this.role = role;
 	}
 
@@ -38,6 +39,10 @@ public class Person extends movida.commons.Person {
 	public ArrayList<Movie> getMovies() {
 		return movies;
 	}	 
+	
+	public int numberOfMovies() {
+		return movies.size();
+	}
 	
 	
 	
