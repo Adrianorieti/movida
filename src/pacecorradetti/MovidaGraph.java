@@ -1,8 +1,8 @@
 package pacecorradetti;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+//import java.util.HashMap;
+//import java.util.Map;
 import java.util.List;
 
 
@@ -11,7 +11,7 @@ import java.util.List;
 public class MovidaGraph {
 	
 	List<Collaboration> collaborationList;
-	HashMap<String, Person> persons;
+	Map<String, Person> persons;
 	
 	public MovidaGraph(Map<String, Movie> movies, Map<String, Person> persons) {
 		this.collaborationList = new ArrayList<Collaboration>();
@@ -20,7 +20,7 @@ public class MovidaGraph {
 	
 	
 	public void populateCollaborations(Map<String, Movie> movies, Map<String, Person> persons) {
-		for (Map.Entry<String, Movie> entry : movies.entrySet())
+		for (Map<String, Movie>.Entry entry : movies.entrySet())
 		{
 			Movie currentMovie = entry.getValue();
 
@@ -41,6 +41,7 @@ public class MovidaGraph {
 		}
 	}
 	
+	
 	public void addCollaboration(Person p1, Person p2, Movie m) {
 		boolean found = false;
 		for (Collaboration collab : p1.collabs)
@@ -48,7 +49,10 @@ public class MovidaGraph {
 			if (collab.getActorA() == p2 || collab.getActorB() == p2)
 			{
 				found = true;
-				collab.movies.add(m);
+				if(!collab.movies.contains(m))
+				{
+					collab.movies.add(m);					
+				}
 				break;
 			}
 		}
