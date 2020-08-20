@@ -140,4 +140,14 @@ public class Algorithms {
 			return o1.getVotes().compareTo(o2.getVotes());
 		}
 	};
+	
+	public static Comparator<Person> N_MOVIES= new Comparator<Person>() {
+		@Override
+		public int compare(Person o1, Person o2) {
+			return o1.numberOfMovies() - o2.numberOfMovies();
+		}
+	};	
+	
 }
+
+

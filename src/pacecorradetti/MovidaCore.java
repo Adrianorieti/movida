@@ -6,6 +6,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import movida.commons.IMovidaConfig;
 import movida.commons.IMovidaDB;
@@ -107,7 +111,14 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
 
 	@Override
 	public Person[] searchMostActiveActors(Integer N) {
-		//TODO create new comparator
+		Stream<Person> actors = personMap.valueList().stream().filter(p -> p.getRole() == PersonRole.actor);
+		Person[] personArr = actors.toArray(Person[]::new);
+		Algorithms.quickSort(personArr, Algorithms.N_MOVIES.reversed());
+		Person[] toReturn = new Person[N];
+		for (int i = 0; i < N; i++) {
+			toReturn[i] = personArr[i];
+		}
+		return toReturn;
 	}
 
 	@Override
@@ -128,6 +139,7 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
 			e.printStackTrace();
 			return;
 		}
+		//TODO rivedere qui
 		lff = temp;
 		movieMap = lff.getMovieMap();
 		personMap = lff.getPersonMap();
@@ -252,6 +264,7 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
 		}
 	}
 
+	//TODO fixare new 
 	@Override
 	public boolean setMap(MapImplementation m) {
 		switch (m) 
@@ -267,10 +280,10 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
 			case HashIndirizzamentoAperto: 
 			{
 				
-				 selectedMap = MapImplementation.HashIndirizzamentoAperto;
-				   movieMap = new HashIndirizzamentoAperto<String, Movie>(313);
-				   personMap = new HashIndirizzamentoAperto<String, Person>(313);
-				   lff.setMap(MapImplementation.HashIndirizzamentoAperto);
+				selectedMap = MapImplementation.HashIndirizzamentoAperto;
+				movieMap = new HashIndirizzamentoAperto<String, Movie>(313);
+				personMap = new HashIndirizzamentoAperto<String, Person>(313);
+				lff.setMap(MapImplementation.HashIndirizzamentoAperto);
 				return true;
 			}
 			default:
