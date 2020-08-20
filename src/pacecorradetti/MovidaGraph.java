@@ -1,12 +1,11 @@
 package pacecorradetti;
 
 import java.util.ArrayList;
-//import java.util.HashMap;
-//import java.util.Map;
+import pacecorradetti.Map;
 import java.util.List;
 
 
-//TODO substitute util.map with pacecorradetti.map
+
 
 public class MovidaGraph {
 	
