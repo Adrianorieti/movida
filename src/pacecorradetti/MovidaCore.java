@@ -11,15 +11,15 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import movida.commons.IMovidaCollaborations;
 import movida.commons.IMovidaConfig;
 import movida.commons.IMovidaDB;
 import movida.commons.IMovidaSearch;
 import movida.commons.MapImplementation;
 import movida.commons.MovidaFileException;
-import movida.commons.Person;
 import movida.commons.SortingAlgorithm;
 
-public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
+public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMovidaCollaborations {
 	//TODO implement last selected
 	LoadFromFile lff;
 	MapImplementation selectedMap = MapImplementation.ArrayOrdinato;
@@ -294,8 +294,33 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch {
 	}
 	
 	@Override
-	public Person[] getDirectCollaboratorsOf(pacecorradetti.Person actor){
-		return actor.getCollabs();
+	public Person[] getDirectCollaboratorsOf(movida.commons.Person actor){
+		ArrayList<Collaboration> collabList = personMap.search(actor.getName()).getCollabs();
+		ArrayList<Person> toReturn = new ArrayList<Person>(); 
+		for (Collaboration c : collabList)
+		{
+			if (c.getActorA().getName().equals(actor.getName()))
+			{
+				toReturn.add(c.getActorB());
+			}
+			else 
+			{
+				toReturn.add(c.getActorA());
+			}
+		}
+		return toReturn.toArray(Person[]::new);
+	}
+
+	@Override
+	public Person[] getTeamOf(movida.commons.Person actor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public movida.commons.Collaboration[] maximizeCollaborationsInTheTeamOf(movida.commons.Person actor) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

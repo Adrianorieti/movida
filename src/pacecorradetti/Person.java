@@ -44,13 +44,13 @@ public class Person extends movida.commons.Person {
 		return movies.size();
 	}
 	// ritorna l'array di ActorB con cui c'è stata una collaborazione
-		public Person[] getCollabs() {
-			Person[] temp = new Person[this.collabs.size()];
-			for(int i=0;i< this.collabs.size();i++)
-			{
-				temp[i] = this.collabs.get(i).actorB;
-			}
-			return temp;
+		public ArrayList<Collaboration> getCollabs() {
+			/*
+			 * Person[] temp = new Person[this.collabs.size()]; for(int i=0;i<
+			 * this.collabs.size();i++) { temp[i] = this.collabs.get(i).actorB; } return
+			 * temp;
+			 */
+			return collabs;
 		}
 	
 	
