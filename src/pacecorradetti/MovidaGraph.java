@@ -10,7 +10,7 @@ import java.util.List;
 public class MovidaGraph {
 	
 	List<Collaboration> collaborationList;
-	Map<String, Person> persons;
+	//Map<String, Person> persons;
 	
 	public MovidaGraph(Map<String, Movie> movies, Map<String, Person> persons) {
 		this.collaborationList = new ArrayList<Collaboration>();

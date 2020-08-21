@@ -4,11 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Queue;
 import java.util.stream.Stream;
 
 import movida.commons.IMovidaCollaborations;
@@ -26,7 +25,12 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 	SortingAlgorithm selectedAlg = SortingAlgorithm.QuickSort;
 	Map<String, Movie> movieMap;
 	Map<String, Person> personMap;
+	MovidaGraph graph;
 	
+	public MovidaCore() {
+		//TODO fix first graph generation
+		//graph = new MovidaGraph(movieMap, personMap);
+	}
 
 	@Override
 	public Movie[] searchMoviesByTitle(String title) {
@@ -144,6 +148,7 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 		lff = temp;
 		movieMap = lff.getMovieMap();
 		personMap = lff.getPersonMap();
+		graph = new MovidaGraph(movieMap, personMap);
 		return;
 	}
 
@@ -219,8 +224,8 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 
 	@Override
 	public Person getPersonByName(String name) {
-		personMap.search(name.trim().toLowerCase());
-		return null;
+		return personMap.search(name.trim().toLowerCase());
+		 
 	}
 
 	@Override
@@ -275,7 +280,7 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 				selectedMap = MapImplementation.ArrayOrdinato;
 				//movieMap = new ArrayOrdinato<String, Movie>();
 				//personMap = new ArrayOrdinato<String, Person>();
-				//lff.setMap(MapImplementation.ArrayOrdinato);
+				lff.setMap(MapImplementation.ArrayOrdinato);
 				return true;
 			}
 			case HashIndirizzamentoAperto: 
@@ -284,7 +289,7 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 				selectedMap = MapImplementation.HashIndirizzamentoAperto;
 				//movieMap = new HashIndirizzamentoAperto<String, Movie>(313);
 				//personMap = new HashIndirizzamentoAperto<String, Person>(313);
-				//lff.setMap(MapImplementation.HashIndirizzamentoAperto);
+				lff.setMap(MapImplementation.HashIndirizzamentoAperto);
 				return true;
 			}
 			default:
@@ -313,8 +318,30 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 
 	@Override
 	public Person[] getTeamOf(movida.commons.Person actor) {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Person> toReturn = new ArrayList<Person>();
+		Person p = personMap.search(actor.getName());
+		HashMap<Person, Boolean> marked = new HashMap<Person, Boolean>();
+		Queue<Person> fringe = new ArrayDeque<Person>();
+		fringe.add(p);
+		marked.put(p, true);
+		
+		while (!fringe.isEmpty())
+		{
+			p = fringe.remove();
+			for (Collaboration c : p.getCollabs())
+			{
+				Person toAdd;
+				toAdd = (!c.getActorA().equals(p))? c.getActorA() : c.getActorB();
+
+				if (!marked.containsKey(toAdd) || marked.get(toAdd) == false) 
+				{
+					fringe.add(toAdd);
+					marked.put(toAdd, true);
+					toReturn.add(toAdd);
+				}
+			}
+		}
+		return toReturn.toArray(Person[]::new);
 	}
 
 	@Override
