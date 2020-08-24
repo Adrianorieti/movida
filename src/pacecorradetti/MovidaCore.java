@@ -29,6 +29,11 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 	MovidaGraph graph;
 	
 	public MovidaCore() {
+		loadConfig Config = new loadConfig(File f);
+		selectedMap = Config.getMap();
+		selectedAlg = Config.getAlgorithm();
+		
+		
 		//TODO fix first graph generation
 		//graph = new MovidaGraph(movieMap, personMap);
 	}
