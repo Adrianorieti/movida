@@ -9,15 +9,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Scanner;
 import java.util.stream.Stream;
 
-import movida.commons.IMovidaCollaborations;
-import movida.commons.IMovidaConfig;
-import movida.commons.IMovidaDB;
-import movida.commons.IMovidaSearch;
-import movida.commons.MapImplementation;
-import movida.commons.MovidaFileException;
-import movida.commons.SortingAlgorithm;
+import movida.commons.*;
+
 
 public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMovidaCollaborations {
 	//TODO implement last selected
@@ -29,7 +25,7 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 	MovidaGraph graph;
 	
 	public MovidaCore() {
-		loadConfig Config = new loadConfig(File f);
+		//loadConfig Config = new loadConfig(File f);
 		selectedMap = Config.getMap();
 		selectedAlg = Config.getAlgorithm();
 		
@@ -305,35 +301,27 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 	}
 	
 	@Override
-	public Person[] getDirectCollaboratorsOf(movida.commons.Person actor){
+	public Person[] getDirectCollaboratorsOf(Person actor){
 		ArrayList<Collaboration> collabList = personMap.search(actor.getName()).getCollabs();
 		ArrayList<Person> toReturn = new ArrayList<Person>(); 
 		for (Collaboration c : collabList)
 		{
-			if (c.getActorA().getName().equals(actor.getName()))
-			{
-				toReturn.add(c.getActorB());
-			}
-			else 
-			{
-				toReturn.add(c.getActorA());
-			}
+			toReturn.add(actor.collaborator(c));
 		}
 		return toReturn.toArray(Person[]::new);
 	}
 
 	@Override
-	public Person[] getTeamOf(movida.commons.Person actor) {
+	public Person[] getTeamOf(Person actor) {
 		ArrayList<Person> toReturn = new ArrayList<Person>();
-		Person p = personMap.search(actor.getName());
 		HashMap<Person, Boolean> marked = new HashMap<Person, Boolean>();
 		Queue<Person> fringe = new ArrayDeque<Person>();
-		fringe.add(p);
-		marked.put(p, true);
+		fringe.add(actor);
+		marked.put(actor, true);
 		
 		while (!fringe.isEmpty())
 		{
-			p = fringe.remove();
+			Person p = fringe.remove();
 			for (Collaboration c : p.getCollabs())
 			{
 				Person toAdd;
@@ -356,13 +344,12 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 		HashMap<Person, Collaboration> bestCollab = new HashMap<Person, Collaboration>();
 		PriorityQueue<Person> toProcess = new PriorityQueue<Person>((a, b) -> score.get(a).compareTo(score.get(b)));
 		
-		Person p1 = getPersonByName(actor.getName());
-		score.put(p1, 0D);
-		toProcess.add(p1);
+		score.put(actor, 0D);
+		toProcess.add(actor);
 			
 		while (!toProcess.isEmpty())
 		{
-			p1 = toProcess.remove();
+			Person p1 = toProcess.remove();
 			for (Collaboration c : p1.getCollabs())
 			{
 				Person p2 = p1.collaborator(c);
@@ -379,4 +366,15 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 		
 	}
 		
+	
+	
+	public void loadConfig(File f) throws MovidaFileException, FileNotFoundException {
+		Scanner scan = new Scanner(f);
+		while (scan.hasNextLine()) 
+		{
+			selectedMap = scan.nextLine();
+			selectedAlg = scan.nextLine();
+		}
+		scan.close();
+	}
 }

@@ -1,4 +1,4 @@
-package PaceCorradetti;
+package pacecorradetti;
 
 public class MovidaBoundException extends RuntimeException {
 
