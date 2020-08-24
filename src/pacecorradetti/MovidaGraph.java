@@ -1,6 +1,8 @@
 package pacecorradetti;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+
 import pacecorradetti.Map;
 import java.util.List;
 
@@ -64,4 +66,12 @@ public class MovidaGraph {
 			collaborationList.add(collabTemp);
 		}
 	}
+
+
+
+	public List<Collaboration> getCollaborationList() {
+		return collaborationList;
+	}
+
+	
 }
