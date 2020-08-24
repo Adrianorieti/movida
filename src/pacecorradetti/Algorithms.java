@@ -141,12 +141,13 @@ public class Algorithms {
 		}
 	};
 	
-	public static Comparator<Person> N_MOVIES= new Comparator<Person>() {
+	public static Comparator<Person> N_MOVIES = new Comparator<Person>() {
 		@Override
 		public int compare(Person o1, Person o2) {
 			return o1.numberOfMovies() - o2.numberOfMovies();
 		}
 	};	
+	
 	
 }
 
