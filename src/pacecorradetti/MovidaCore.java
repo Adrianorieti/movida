@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.stream.Stream;
 
@@ -346,8 +347,31 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 
 	@Override
 	public movida.commons.Collaboration[] maximizeCollaborationsInTheTeamOf(movida.commons.Person actor) {
-		// TODO Auto-generated method stub
-		return null;
+		HashMap<Person, Double> score = new HashMap<Person, Double>();
+		HashMap<Person, Collaboration> bestCollab = new HashMap<Person, Collaboration>();
+		PriorityQueue<Person> toProcess = new PriorityQueue<Person>((a, b) -> score.get(a).compareTo(score.get(b)));
+		
+		Person p1 = getPersonByName(actor.getName());
+		score.put(p1, 0D);
+		toProcess.add(p1);
+			
+		while (!toProcess.isEmpty())
+		{
+			p1 = toProcess.remove();
+			for (Collaboration c : p1.getCollabs())
+			{
+				Person p2 = p1.collaborator(c);
+				if (!score.containsKey(p2) || score.get(p2) < score.get(p1) + c.getScore())
+				{
+					score.put(p2, score.get(p1) + c.getScore());
+					toProcess.add(p2);
+					bestCollab.put(p2, c);
+				}
+			}
+		}
+		
+		return bestCollab.values().toArray(Collaboration[]::new);
+		
 	}
-
+		
 }
