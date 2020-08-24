@@ -3,7 +3,8 @@ package pacecorradetti;
 import java.util.Scanner;
 
 import movida.commons.MovidaFileException;
-
+import movida.commons.Movie;
+import movida.commons.Person;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -17,11 +18,10 @@ import movida.commons.MapImplementation;
 
 
 public class LoadFromFile {
-//	private HashMap<String, Person> personMap;
-//	private HashMap<String, Movie> movieMap;
 	private MapImplementation selectedMap;
 	private Map<String, Person> personMap;
 	private Map<String, Movie> movieMap;
+	
 	public void load(File f) throws MovidaFileException, FileNotFoundException {
 
 		Scanner scan = new Scanner(f);
@@ -92,7 +92,7 @@ public class LoadFromFile {
 			//popola lista di film per ogni attore
 			for (Person p : movieToAdd.getCast())
 			{
-				p.movies.add(movieToAdd);
+				p.getMovies().add(movieToAdd);
 			}
 			
 			movieMap.putIfAbsent(movieToAdd.getTitle(), movieToAdd);

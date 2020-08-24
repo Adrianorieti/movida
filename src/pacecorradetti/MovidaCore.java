@@ -10,12 +10,15 @@ import java.util.HashMap;
 import java.util.Queue;
 import java.util.stream.Stream;
 
+import movida.commons.Collaboration;
 import movida.commons.IMovidaCollaborations;
 import movida.commons.IMovidaConfig;
 import movida.commons.IMovidaDB;
 import movida.commons.IMovidaSearch;
 import movida.commons.MapImplementation;
 import movida.commons.MovidaFileException;
+import movida.commons.Movie;
+import movida.commons.Person;
 import movida.commons.SortingAlgorithm;
 
 public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMovidaCollaborations {
@@ -299,7 +302,7 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 	}
 	
 	@Override
-	public Person[] getDirectCollaboratorsOf(movida.commons.Person actor){
+	public Person[] getDirectCollaboratorsOf(Person actor){
 		ArrayList<Collaboration> collabList = personMap.search(actor.getName()).getCollabs();
 		ArrayList<Person> toReturn = new ArrayList<Person>(); 
 		for (Collaboration c : collabList)
@@ -317,17 +320,16 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 	}
 
 	@Override
-	public Person[] getTeamOf(movida.commons.Person actor) {
+	public Person[] getTeamOf(Person actor) {
 		ArrayList<Person> toReturn = new ArrayList<Person>();
-		Person p = personMap.search(actor.getName());
 		HashMap<Person, Boolean> marked = new HashMap<Person, Boolean>();
 		Queue<Person> fringe = new ArrayDeque<Person>();
-		fringe.add(p);
-		marked.put(p, true);
+		fringe.add(actor);
+		marked.put(actor, true);
 		
 		while (!fringe.isEmpty())
 		{
-			p = fringe.remove();
+			Person p = fringe.remove();
 			for (Collaboration c : p.getCollabs())
 			{
 				Person toAdd;

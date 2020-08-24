@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import pacecorradetti.Map;
 import java.util.List;
 
+import movida.commons.Collaboration;
+import movida.commons.Movie;
+import movida.commons.Person;
+
 
 
 
@@ -43,14 +47,14 @@ public class MovidaGraph {
 	
 	public void addCollaboration(Person p1, Person p2, Movie m) {
 		boolean found = false;
-		for (Collaboration collab : p1.collabs)
+		for (Collaboration collab : p1.getCollabs())
 		{
 			if (collab.getActorA() == p2 || collab.getActorB() == p2)
 			{
 				found = true;
-				if(!collab.movies.contains(m))
+				if(!collab.getMovies().contains(m))
 				{
-					collab.movies.add(m);					
+					collab.getMovies().add(m);					
 				}
 				break;
 			}
@@ -58,9 +62,9 @@ public class MovidaGraph {
 		if (!found)
 		{
 			Collaboration collabTemp = new Collaboration(p1, p2);
-			collabTemp.movies.add(m);
-			p1.collabs.add(collabTemp);
-			p2.collabs.add(collabTemp);
+			collabTemp.getMovies().add(m);
+			p1.getCollabs().add(collabTemp);
+			p2.getCollabs().add(collabTemp);
 			collaborationList.add(collabTemp);
 		}
 	}

@@ -1,6 +1,6 @@
 package pacecorradetti;
 
-enum PersonRole {
+public enum PersonRole {
 	actor,
 	director
 };

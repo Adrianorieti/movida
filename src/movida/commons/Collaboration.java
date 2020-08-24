@@ -8,6 +8,10 @@ public class Collaboration {
 	Person actorB;
 	ArrayList<Movie> movies;
 	
+	public ArrayList<Movie> getMovies() {
+		return movies;
+	}
+
 	public Collaboration(Person actorA, Person actorB) {
 		this.actorA = actorA;
 		this.actorB = actorB;
@@ -30,6 +34,23 @@ public class Collaboration {
 			score += m.getVotes();
 		
 		return score / movies.size();
+	}
+	
+	
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Collaboration [actorA=");
+		builder.append(actorA);
+		builder.append(", actorB=");
+		builder.append(actorB);
+		builder.append(", movies=");
+		builder.append(movies);
+		builder.append(", getScore()=");
+		builder.append(getScore());
+		builder.append("]");
+		return builder.toString();
 	}
 	
 }

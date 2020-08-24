@@ -3,6 +3,9 @@ package pacecorradetti;
 import java.util.Comparator;
 import java.util.concurrent.ThreadLocalRandom;
 
+import movida.commons.Movie;
+import movida.commons.Person;
+
 public class Algorithms {
 
 	public static <K extends Comparable<K>> void quickSort(K array[]) {

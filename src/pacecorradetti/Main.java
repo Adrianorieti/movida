@@ -11,12 +11,12 @@ public class Main {
 		LoadFromFile lff = new LoadFromFile();
 		lff.load( new File("C:\\Users\\Andrea\\eclipse-workspace\\Algos\\src\\movida\\commons\\esempio-formato-dati.txt"));
 
-		MovidaGraph g = new MovidaGraph(lff.movieMap, lff.personMap);
+		MovidaGraph g = new MovidaGraph(lff.getMovieMap(), lff.getPersonMap());
 		
 		for (Collaboration c : g.collaborationList)
 		{
 			System.out.println(c.getActorA() + " " + c.getActorA());
-			System.out.println(c.movies.toString());
+			System.out.println(c.getMovies().toString());
 		}
 
 	}
