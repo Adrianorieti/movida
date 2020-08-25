@@ -23,15 +23,13 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 	Map<String, Movie> movieMap;
 	Map<String, Person> personMap;
 	MovidaGraph graph;
-	
+	 File file ;
+		loadConfig Config ;
+
 	public MovidaCore() {
-		//loadConfig Config = new loadConfig(File f);
-		selectedMap = Config.getMap();
-		selectedAlg = Config.getAlgorithm();
-		
-		
-		//TODO fix first graph generation
-		//graph = new MovidaGraph(movieMap, personMap);
+		//Creazione del tipo di dato iniziale Config contenente struttura e algoritmo standard
+				file = new File("C:\\Users\\Adriano\\Desktop\\eclipse\\Movida\\src\\pacecorradetti\\config.ini");
+				Config = new loadConfig(file);
 	}
 
 	@Override
@@ -259,11 +257,27 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 			case QuickSort: 
 			{
 				selectedAlg = SortingAlgorithm.QuickSort;
+				try 
+				{
+					Config.overrideAlg(file, "QuickSort");
+				} catch (IOException e) 
+				{
+					System.out.print("File not found");
+					e.printStackTrace();
+				}
 				return true;
 			}
 			case InsertionSort: 
 			{
 				selectedAlg = SortingAlgorithm.SelectionSort;
+				try 
+				{
+					Config.overrideAlg(file, "InsertionSort");
+				} catch (IOException e) 
+				{
+					System.out.print("File not found");
+					e.printStackTrace();
+				}
 				return true;
 			}
 			default:
@@ -280,18 +294,30 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 			case ArrayOrdinato: 
 			{
 				selectedMap = MapImplementation.ArrayOrdinato;
-				//movieMap = new ArrayOrdinato<String, Movie>();
-				//personMap = new ArrayOrdinato<String, Person>();
 				lff.setMap(MapImplementation.ArrayOrdinato);
+				try 
+				{
+					Config.overrideMap(file, "ArrayOrdinato");
+				} catch (IOException e) 
+				{
+					System.out.print("File not found");
+					e.printStackTrace();
+				}
 				return true;
 			}
 			case HashIndirizzamentoAperto: 
 			{
 				
 				selectedMap = MapImplementation.HashIndirizzamentoAperto;
-				//movieMap = new HashIndirizzamentoAperto<String, Movie>(313);
-				//personMap = new HashIndirizzamentoAperto<String, Person>(313);
 				lff.setMap(MapImplementation.HashIndirizzamentoAperto);
+				try 
+				{
+					Config.overrideMap(file, "HashIndirizzamentoAperto");
+				} catch (IOException e) 
+				{
+					System.out.print("File not found");
+					e.printStackTrace();
+				}
 				return true;
 			}
 			default:
