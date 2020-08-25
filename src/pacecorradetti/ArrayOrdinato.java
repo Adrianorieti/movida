@@ -33,7 +33,7 @@ public class ArrayOrdinato<K extends Comparable<K>, V extends Object> extends pa
 		
 	
 	private int locationOf(K key) {
-		return locationOf(key, 0, lastIndex);
+		return locationOf(key, 0, length());
 	}
 	
 	private int locationOf(K key, int low, int up) {
