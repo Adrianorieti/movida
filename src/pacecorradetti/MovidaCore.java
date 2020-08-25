@@ -14,33 +14,24 @@ import java.util.stream.Stream;
 
 import movida.commons.*;
 
-
 public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMovidaCollaborations {
-	//TODO implement last selected
+	// TODO implement last selected
 	LoadFromFile lff;
 	MapImplementation selectedMap = MapImplementation.ArrayOrdinato;
 	SortingAlgorithm selectedAlg = SortingAlgorithm.QuickSort;
 	Map<String, Movie> movieMap;
 	Map<String, Person> personMap;
 	MovidaGraph graph;
-	
+
 	public MovidaCore() {
-		//loadConfig Config = new loadConfig(File f);
-		selectedMap = Config.getMap();
-		selectedAlg = Config.getAlgorithm();
-		
-		
-		//TODO fix first graph generation
 		//graph = new MovidaGraph(movieMap, personMap);
 	}
 
 	@Override
 	public Movie[] searchMoviesByTitle(String title) {
 		ArrayList<Movie> l = new ArrayList<Movie>();
-		for (Map<String, Movie>.Entry e : movieMap.entrySet())
-		{
-			if (e.key.contains(title))
-			{
+		for (Map<String, Movie>.Entry e : movieMap.entrySet()) {
+			if (e.key.contains(title)) {
 				l.add(e.getValue());
 			}
 		}
@@ -50,10 +41,8 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 	@Override
 	public Movie[] searchMoviesInYear(Integer year) {
 		ArrayList<Movie> l = new ArrayList<Movie>();
-		for (Map<String, Movie>.Entry e : movieMap.entrySet())
-		{
-			if (e.getValue().getYear().equals(year) )
-			{
+		for (Map<String, Movie>.Entry e : movieMap.entrySet()) {
+			if (e.getValue().getYear().equals(year)) {
 				l.add(e.getValue());
 			}
 		}
@@ -63,10 +52,8 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 	@Override
 	public Movie[] searchMoviesDirectedBy(String name) {
 		ArrayList<Movie> l = new ArrayList<Movie>();
-		for (Map<String, Movie>.Entry e : movieMap.entrySet())
-		{
-			if (e.getValue().getDirector().getName().equals(name.trim().toLowerCase()) )
-			{
+		for (Map<String, Movie>.Entry e : movieMap.entrySet()) {
+			if (e.getValue().getDirector().getName().equals(name.trim().toLowerCase())) {
 				l.add(e.getValue());
 			}
 		}
@@ -76,13 +63,10 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 	@Override
 	public Movie[] searchMoviesStarredBy(String name) {
 		ArrayList<Movie> l = new ArrayList<Movie>();
-		for (Map<String, Movie>.Entry e : movieMap.entrySet())
-		{
+		for (Map<String, Movie>.Entry e : movieMap.entrySet()) {
 			Movie m = e.getValue();
-			for (Person p : m.getCast())
-			{
-				if (p.getName().equals(name.trim().toLowerCase()))
-				{
+			for (Person p : m.getCast()) {
+				if (p.getName().equals(name.trim().toLowerCase())) {
 					l.add(e.getValue());
 					break;
 				}
@@ -90,7 +74,6 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 		}
 		return l.toArray(new Movie[l.size()]);
 	}
-
 
 	@Override
 	public Movie[] searchMostVotedMovies(Integer N) {
@@ -130,23 +113,19 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 
 	@Override
 	public void loadFromFile(File f) {
+		
 		LoadFromFile temp = new LoadFromFile();
 		temp.setMap(selectedMap);
-		try 
-		{
-			temp.load(f);			
-		}
-		catch (MovidaFileException fe)
-		{
+		try {
+			temp.load(f);
+		} catch (MovidaFileException fe) {
 			fe.printStackTrace();
 			return;
-		} 
-		catch (FileNotFoundException e) 
-		{
+		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return;
 		}
-		//TODO rivedere qui
+		// TODO rivedere qui
 		lff = temp;
 		movieMap = lff.getMovieMap();
 		personMap = lff.getPersonMap();
@@ -156,41 +135,36 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 
 	@Override
 	public void saveToFile(File f) {
-		
-		 try 
-		 {
+
+		try {
 			FileWriter save = new FileWriter(f);
-			for (Map<String, Movie>.Entry e : movieMap.entrySet())
-			{
+			for (Map<String, Movie>.Entry e : movieMap.entrySet()) {
 				save.append("Title:" + "\t" + e.value.getTitle() + "\n");
-				
-				save.append("Year:" +"\t" + e.value.getYear() + "\n");
-				
+
+				save.append("Year:" + "\t" + e.value.getYear() + "\n");
+
 				save.append("Director:" + "\t" + e.value.getDirector().getName() + "\n");
-				
-				Person cast[] =  e.value.getCast();
+
+				Person cast[] = e.value.getCast();
 				save.append("Cast:" + "\t");
-				for(int i=0;i < cast.length;i++)
-				  {
-					if(i == cast.length-1) save.append(cast[i].getName() +"\n"); //l'ultimo elemento non ha la virgola 
-					else save.append(cast[i].getName() +"," +"\t");
-				  }
-					
+				for (int i = 0; i < cast.length; i++) {
+					if (i == cast.length - 1)
+						save.append(cast[i].getName() + "\n"); // l'ultimo elemento non ha la virgola
+					else
+						save.append(cast[i].getName() + "," + "\t");
+				}
+
 				save.append("Votes" + "\t" + e.value.getVotes() + "\n");
 				save.append("\n");
-			
+
 			}
-			
+
 			save.close();
-		 } 
-		 catch (IOException e) 
-		 {
+		} catch (IOException e) {
 			System.out.println("Impossibile aprire il file.");
 			e.printStackTrace();
-		 }
-	  }
-
-	
+		}
+	}
 
 	@Override
 	public void clear() {
@@ -227,15 +201,14 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 	@Override
 	public Person getPersonByName(String name) {
 		return personMap.search(name.trim().toLowerCase());
-		 
+
 	}
 
 	@Override
 	public Movie[] getAllMovies() {
 		Movie[] arr = new Movie[movieMap.length()];
 		int i = 0;
-		for (Map<String, Movie>.Entry e : movieMap.entrySet()) 
-		{
+		for (Map<String, Movie>.Entry e : movieMap.entrySet()) {
 			arr[i++] = e.getValue();
 		}
 		return arr;
@@ -245,8 +218,7 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 	public Person[] getAllPeople() {
 		Person[] arr = new Person[personMap.length()];
 		int i = 0;
-		for (Map<String, Person>.Entry e : personMap.entrySet()) 
-		{
+		for (Map<String, Person>.Entry e : personMap.entrySet()) {
 			arr[i++] = e.getValue();
 		}
 		return arr;
@@ -254,58 +226,51 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 
 	@Override
 	public boolean setSort(SortingAlgorithm a) {
-		switch (a) 
-		{
-			case QuickSort: 
-			{
-				selectedAlg = SortingAlgorithm.QuickSort;
-				return true;
-			}
-			case InsertionSort: 
-			{
-				selectedAlg = SortingAlgorithm.SelectionSort;
-				return true;
-			}
-			default:
-				new IllegalArgumentException("Unexpected value: " + a + "; Algorithm unchanged").printStackTrace();
-				return false;
+		switch (a) {
+		case QuickSort: {
+			selectedAlg = SortingAlgorithm.QuickSort;
+			return true;
+		}
+		case InsertionSort: {
+			selectedAlg = SortingAlgorithm.SelectionSort;
+			return true;
+		}
+		default:
+			new IllegalArgumentException("Unexpected value: " + a + "; Algorithm unchanged").printStackTrace();
+			return false;
 		}
 	}
 
-	//TODO fixare new 
+	// TODO fixare new
 	@Override
 	public boolean setMap(MapImplementation m) {
-		switch (m) 
-		{
-			case ArrayOrdinato: 
-			{
-				selectedMap = MapImplementation.ArrayOrdinato;
-				//movieMap = new ArrayOrdinato<String, Movie>();
-				//personMap = new ArrayOrdinato<String, Person>();
-				lff.setMap(MapImplementation.ArrayOrdinato);
-				return true;
-			}
-			case HashIndirizzamentoAperto: 
-			{
-				
-				selectedMap = MapImplementation.HashIndirizzamentoAperto;
-				//movieMap = new HashIndirizzamentoAperto<String, Movie>(313);
-				//personMap = new HashIndirizzamentoAperto<String, Person>(313);
-				lff.setMap(MapImplementation.HashIndirizzamentoAperto);
-				return true;
-			}
-			default:
-				new IllegalArgumentException("Unexpected value: " + "; Map unchanged");
-				return false;
+		switch (m) {
+		case ArrayOrdinato: {
+			selectedMap = MapImplementation.ArrayOrdinato;
+			// movieMap = new ArrayOrdinato<String, Movie>();
+			// personMap = new ArrayOrdinato<String, Person>();
+			lff.setMap(MapImplementation.ArrayOrdinato);
+			return true;
+		}
+		case HashIndirizzamentoAperto: {
+
+			selectedMap = MapImplementation.HashIndirizzamentoAperto;
+			// movieMap = new HashIndirizzamentoAperto<String, Movie>(313);
+			// personMap = new HashIndirizzamentoAperto<String, Person>(313);
+			lff.setMap(MapImplementation.HashIndirizzamentoAperto);
+			return true;
+		}
+		default:
+			new IllegalArgumentException("Unexpected value: " + "; Map unchanged");
+			return false;
 		}
 	}
-	
+
 	@Override
-	public Person[] getDirectCollaboratorsOf(Person actor){
+	public Person[] getDirectCollaboratorsOf(Person actor) {
 		ArrayList<Collaboration> collabList = personMap.search(actor.getName()).getCollabs();
-		ArrayList<Person> toReturn = new ArrayList<Person>(); 
-		for (Collaboration c : collabList)
-		{
+		ArrayList<Person> toReturn = new ArrayList<Person>();
+		for (Collaboration c : collabList) {
 			toReturn.add(actor.collaborator(c));
 		}
 		return toReturn.toArray(Person[]::new);
@@ -318,17 +283,14 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 		Queue<Person> fringe = new ArrayDeque<Person>();
 		fringe.add(actor);
 		marked.put(actor, true);
-		
-		while (!fringe.isEmpty())
-		{
-			Person p = fringe.remove();
-			for (Collaboration c : p.getCollabs())
-			{
-				Person toAdd;
-				toAdd = (!c.getActorA().equals(p))? c.getActorA() : c.getActorB();
 
-				if (!marked.containsKey(toAdd) || marked.get(toAdd) == false) 
-				{
+		while (!fringe.isEmpty()) {
+			Person p = fringe.remove();
+			for (Collaboration c : p.getCollabs()) {
+				Person toAdd;
+				toAdd = (!c.getActorA().equals(p)) ? c.getActorA() : c.getActorB();
+
+				if (!marked.containsKey(toAdd) || marked.get(toAdd) == false) {
 					fringe.add(toAdd);
 					marked.put(toAdd, true);
 					toReturn.add(toAdd);
@@ -339,41 +301,51 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 	}
 
 	@Override
-	public movida.commons.Collaboration[] maximizeCollaborationsInTheTeamOf(movida.commons.Person actor) {
+	//FIXME edge get reused causing infinite loops
+	public Collaboration[] maximizeCollaborationsInTheTeamOf(Person actor) {
 		HashMap<Person, Double> score = new HashMap<Person, Double>();
 		HashMap<Person, Collaboration> bestCollab = new HashMap<Person, Collaboration>();
 		PriorityQueue<Person> toProcess = new PriorityQueue<Person>((a, b) -> score.get(a).compareTo(score.get(b)));
+		HashMap<Collaboration, Boolean> checked = new HashMap<Collaboration, Boolean>(); 
 		
 		score.put(actor, 0D);
 		toProcess.add(actor);
-			
-		while (!toProcess.isEmpty())
+
+		while (!toProcess.isEmpty()) 
 		{
 			Person p1 = toProcess.remove();
-			for (Collaboration c : p1.getCollabs())
+			for (Collaboration c : p1.getCollabs()) 
 			{
-				Person p2 = p1.collaborator(c);
-				if (!score.containsKey(p2) || score.get(p2) < score.get(p1) + c.getScore())
+				if (!checked.containsKey(c))
 				{
-					score.put(p2, score.get(p1) + c.getScore());
-					toProcess.add(p2);
-					bestCollab.put(p2, c);
+					Person p2 = p1.collaborator(c);
+					if (!score.containsKey(p2)) 
+					{
+						score.put(p2, score.get(p1) + c.getScore());
+						toProcess.add(p2);
+						bestCollab.put(p2, c);	
+						checked.put(c, true);
+					}
+					else if(score.get(p2) < score.get(p1) + c.getScore())
+					{
+						score.put(p2, score.get(p1) + c.getScore());
+						bestCollab.put(p2, c);
+						checked.put(c, true);
+					}					
 				}
+				
 			}
 		}
-		
+
 		return bestCollab.values().toArray(Collaboration[]::new);
-		
+
 	}
-		
-	
-	
+
 	public void loadConfig(File f) throws MovidaFileException, FileNotFoundException {
 		Scanner scan = new Scanner(f);
-		while (scan.hasNextLine()) 
-		{
-			selectedMap = scan.nextLine();
-			selectedAlg = scan.nextLine();
+		while (scan.hasNextLine()) {
+			// selectedMap = scan.nextLine();
+			// selectedAlg = scan.nextLine();
 		}
 		scan.close();
 	}
