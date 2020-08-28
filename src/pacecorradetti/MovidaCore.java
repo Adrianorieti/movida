@@ -6,10 +6,20 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Scanner;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import movida.commons.*;
@@ -301,44 +311,73 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 	}
 
 	@Override
-	//FIXME edge get reused causing infinite loops
 	public Collaboration[] maximizeCollaborationsInTheTeamOf(Person actor) {
-		HashMap<Person, Double> score = new HashMap<Person, Double>();
-		HashMap<Person, Collaboration> bestCollab = new HashMap<Person, Collaboration>();
-		PriorityQueue<Person> toProcess = new PriorityQueue<Person>((a, b) -> score.get(a).compareTo(score.get(b)));
-		HashMap<Collaboration, Boolean> checked = new HashMap<Collaboration, Boolean>(); 
-		
-		score.put(actor, 0D);
-		toProcess.add(actor);
-
-		while (!toProcess.isEmpty()) 
+//		HashMap<Person, Double> score = new HashMap<Person, Double>();
+//		HashMap<Person, Collaboration> bestCollab = new HashMap<Person, Collaboration>();
+//		PriorityQueue<Person> toProcess = new PriorityQueue<Person>((a, b) -> score.get(a).compareTo(score.get(b)));
+//		HashMap<Collaboration, Boolean> checked = new HashMap<Collaboration, Boolean>(); 
+//		
+//		score.put(actor, 0D);
+//		toProcess.add(actor);
+//
+//		while (!toProcess.isEmpty()) 
+//		{
+//			Person p1 = toProcess.remove();
+//			for (Collaboration c : p1.getCollabs()) 
+//			{
+//				if (!checked.containsKey(c))
+//				{
+//					Person p2 = p1.collaborator(c);
+//					if (!score.containsKey(p2)) 
+//					{
+//						score.put(p2, score.get(p1) + c.getScore());
+//						toProcess.add(p2);
+//						bestCollab.put(p2, c);	
+//						checked.put(c, true);
+//					}
+//					else if(score.get(p2) < score.get(p1) + c.getScore())
+//					{
+//						score.put(p2, score.get(p1) + c.getScore());
+//						bestCollab.put(p2, c);
+//						checked.put(c, true);
+//					}					
+//				}
+//			}
+//		}
+//
+//		return bestCollab.values().toArray(Collaboration[]::new);
+		Person [] team = getTeamOf(actor);
+		HashMap<Person, LinkedList<Person>> head = new HashMap<>();
+		ArrayList<Collaboration> toReturn = new ArrayList<Collaboration>();
+		List<Collaboration> collabs = new ArrayList<Collaboration>();
+		head.put(actor, new LinkedList<Person>());
+		head.get(actor).add(actor);
+		for (Person p : team) 
 		{
-			Person p1 = toProcess.remove();
-			for (Collaboration c : p1.getCollabs()) 
+			head.putIfAbsent(p, new LinkedList<Person>());
+			head.get(p).add(p);
+			collabs.addAll(p.getCollabs());
+		}
+		collabs = collabs.stream().distinct()
+				.sorted((a, b) -> b.getScore().compareTo(a.getScore()))
+				.collect(Collectors.toList());
+				
+		for (Collaboration c : collabs)
+		{
+			Person a = c.getActorA();
+			Person b = c.getActorB();
+			if(head.get(a) != head.get(b))
 			{
-				if (!checked.containsKey(c))
-				{
-					Person p2 = p1.collaborator(c);
-					if (!score.containsKey(p2)) 
-					{
-						score.put(p2, score.get(p1) + c.getScore());
-						toProcess.add(p2);
-						bestCollab.put(p2, c);	
-						checked.put(c, true);
-					}
-					else if(score.get(p2) < score.get(p1) + c.getScore())
-					{
-						score.put(p2, score.get(p1) + c.getScore());
-						bestCollab.put(p2, c);
-						checked.put(c, true);
-					}					
-				}
+				toReturn.add(c);
+				head.get(a).addAll(head.get(b));
+				head.replace(b, head.get(a));
 				
 			}
 		}
-
-		return bestCollab.values().toArray(Collaboration[]::new);
-
+		
+		return toReturn.toArray(Collaboration[]::new);
+		
+	
 	}
 
 	public void loadConfig(File f) throws MovidaFileException, FileNotFoundException {
