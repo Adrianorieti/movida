@@ -34,6 +34,8 @@ public class Person {
 	public Person(String name, PersonRole role) {
 		this.name = name;
 		this.role = role;
+		this.movies = new ArrayList<Movie>();
+		this.collabs = new ArrayList<Collaboration>();
 		
 	}
 	
