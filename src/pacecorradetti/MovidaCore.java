@@ -6,19 +6,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Scanner;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -33,8 +25,16 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 	Map<String, Person> personMap;
 	MovidaGraph graph;
 
+	File file ;
+	loadConfig lc ;
+
 	public MovidaCore() {
-		//graph = new MovidaGraph(movieMap, personMap);
+		file = new File("config.ini");
+		try {
+			lc = new loadConfig(file);
+		} catch (MovidaFileException | FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -236,43 +236,77 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 
 	@Override
 	public boolean setSort(SortingAlgorithm a) {
-		switch (a) {
-		case QuickSort: {
-			selectedAlg = SortingAlgorithm.QuickSort;
-			return true;
-		}
-		case InsertionSort: {
-			selectedAlg = SortingAlgorithm.SelectionSort;
-			return true;
-		}
-		default:
-			new IllegalArgumentException("Unexpected value: " + a + "; Algorithm unchanged").printStackTrace();
-			return false;
+		switch (a) 
+		{
+			case QuickSort: 
+			{
+				selectedAlg = SortingAlgorithm.QuickSort;
+				try 
+				{
+					lc.overrideAlg(file, "QuickSort");
+				} catch (IOException e) 
+				{
+					System.out.print("File not found");
+					e.printStackTrace();
+				}
+				return true;
+			}
+			case InsertionSort: 
+			{
+				selectedAlg = SortingAlgorithm.SelectionSort;
+				try 
+				{
+					lc.overrideAlg(file, "InsertionSort");
+				} catch (IOException e) 
+				{
+					System.out.print("File not found");
+					e.printStackTrace();
+				}
+				return true;
+			}
+			default:
+				new IllegalArgumentException("Unexpected value: " + a + "; Algorithm unchanged").printStackTrace();
+				return false;
 		}
 	}
 
 	// TODO fixare new
 	@Override
 	public boolean setMap(MapImplementation m) {
-		switch (m) {
-		case ArrayOrdinato: {
-			selectedMap = MapImplementation.ArrayOrdinato;
-			// movieMap = new ArrayOrdinato<String, Movie>();
-			// personMap = new ArrayOrdinato<String, Person>();
-			lff.setMap(MapImplementation.ArrayOrdinato);
-			return true;
-		}
-		case HashIndirizzamentoAperto: {
-
-			selectedMap = MapImplementation.HashIndirizzamentoAperto;
-			// movieMap = new HashIndirizzamentoAperto<String, Movie>(313);
-			// personMap = new HashIndirizzamentoAperto<String, Person>(313);
-			lff.setMap(MapImplementation.HashIndirizzamentoAperto);
-			return true;
-		}
-		default:
-			new IllegalArgumentException("Unexpected value: " + "; Map unchanged");
-			return false;
+		switch (m) 
+		{
+			case ArrayOrdinato: 
+			{
+				selectedMap = MapImplementation.ArrayOrdinato;
+				lff.setMap(MapImplementation.ArrayOrdinato);
+				try 
+				{
+					lc.overrideMap(file, "ArrayOrdinato");
+				} catch (IOException e) 
+				{
+					System.out.print("File not found");
+					e.printStackTrace();
+				}
+				return true;
+			}
+			case HashIndirizzamentoAperto: 
+			{
+				
+				selectedMap = MapImplementation.HashIndirizzamentoAperto;
+				lff.setMap(MapImplementation.HashIndirizzamentoAperto);
+				try 
+				{
+					lc.overrideMap(file, "HashIndirizzamentoAperto");
+				} catch (IOException e) 
+				{
+					System.out.print("File not found");
+					e.printStackTrace();
+				}
+				return true;
+			}
+			default:
+				new IllegalArgumentException("Unexpected value: " + "; Map unchanged");
+				return false;
 		}
 	}
 
