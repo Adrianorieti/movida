@@ -381,15 +381,15 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 //
 //		return bestCollab.values().toArray(Collaboration[]::new);
 		Person [] team = getTeamOf(actor);
-		HashMap<Person, LinkedList<Person>> head = new HashMap<>();
+		HashMap<Person, LinkedList<Person>> rep = new HashMap<>();		//associa ogni elemento alla lista che lo contiene
 		ArrayList<Collaboration> toReturn = new ArrayList<Collaboration>();
 		List<Collaboration> collabs = new ArrayList<Collaboration>();
-		head.put(actor, new LinkedList<Person>());
-		head.get(actor).add(actor);
+		rep.put(actor, new LinkedList<Person>());
+		rep.get(actor).add(actor);
 		for (Person p : team) 
 		{
-			head.putIfAbsent(p, new LinkedList<Person>());
-			head.get(p).add(p);
+			rep.putIfAbsent(p, new LinkedList<Person>());
+			rep.get(p).add(p);
 			collabs.addAll(p.getCollabs());
 		}
 		collabs = collabs.stream().distinct()
@@ -400,18 +400,23 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 		{
 			Person a = c.getActorA();
 			Person b = c.getActorB();
-			if(head.get(a) != head.get(b))
+			if(rep.get(a) != rep.get(b))				//se la lista associata è diversa gli insiemi sono disgiunti
 			{
 				toReturn.add(c);
-				head.get(a).addAll(head.get(b));
-				head.replace(b, head.get(a));
-				
+				if (rep.get(a).size() <= rep.get(b).size())
+				{
+					rep.get(b).addAll(rep.get(a));
+					rep.replace(a, rep.get(b));					
+				}
+				else
+				{
+					rep.get(a).addAll(rep.get(b));
+					rep.replace(b, rep.get(a));	
+				}
 			}
 		}
 		
 		return toReturn.toArray(Collaboration[]::new);
-		
-	
 	}
 
 	public void loadConfig(File f) throws MovidaFileException, FileNotFoundException {
