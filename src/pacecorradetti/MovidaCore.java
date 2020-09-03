@@ -16,7 +16,6 @@ import java.util.stream.Stream;
 import movida.commons.*;
 
 public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMovidaCollaborations {
-	// TODO implement last selected
 	LoadFromFile lff;
 	MapImplementation selectedMap = MapImplementation.ArrayOrdinato;
 	SortingAlgorithm selectedAlg = SortingAlgorithm.QuickSort;
@@ -24,13 +23,14 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 	Map<String, Person> personMap;
 	MovidaGraph graph;
 
-	File file ;
-	loadConfig lc ;
+	File configFile ;
+	ConfigManager confingMan ;
 
 	public MovidaCore() {
-		file = new File("config.ini");
-		try {
-			lc = new loadConfig(file);
+		configFile = new File("config.ini");
+		try 
+		{
+			confingMan = new ConfigManager(configFile);
 		} catch (MovidaFileException | FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -99,7 +99,21 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 	public Movie[] searchMostVotedMovies(Integer N) {
 		ArrayList<Movie> movieList = movieMap.valueList();
 		Movie[] movieArr = movieList.toArray(new Movie[movieList.size()]);
-		Algorithms.quickSort(movieArr, Algorithms.VOTES.reversed());
+		switch (selectedAlg) 
+		{
+			case QuickSort: 
+			{
+				Algorithms.quickSort(movieArr, Algorithms.VOTES.reversed());
+				break;
+			}
+			case InsertionSort:
+			{
+				Algorithms.InsertionSort(movieArr, Algorithms.VOTES.reversed());
+				break;
+			}
+			default:
+				throw new IllegalArgumentException("Unexpected value: " + selectedAlg);
+		}
 		Movie[] toReturn = new Movie[(N <= movieArr.length)? N : movieArr.length];
 		for (int i = 0; i < N && i < movieArr.length; i++) 
 		{
@@ -112,17 +126,20 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 	public Movie[] searchMostRecentMovies(Integer N) {
 		ArrayList<Movie> movieList = movieMap.valueList();
 		Movie[] movieArr = movieList.toArray(new Movie[movieList.size()]);
-		switch (selectedAlg) {
-		case QuickSort: {
-			Algorithms.quickSort(movieArr, Algorithms.RECENT.reversed());
-			break;
-		}
-		case InsertionSort: {
-			Algorithms.InsertionSort(movieArr, Algorithms.RECENT.reversed());
-			break;
-		}
-		default:
-			throw new IllegalArgumentException("Unexpected value: " + selectedAlg);
+		switch (selectedAlg) 
+		{
+			case QuickSort: 
+			{
+				Algorithms.quickSort(movieArr, Algorithms.RECENT.reversed());
+				break;
+			}
+			case InsertionSort: 
+			{
+				Algorithms.InsertionSort(movieArr, Algorithms.RECENT.reversed());
+				break;
+			}
+			default:
+				throw new IllegalArgumentException("Unexpected value: " + selectedAlg);
 		}
 		Movie[] toReturn = new Movie[(N <= movieArr.length)? N : movieArr.length];
 		for (int i = 0; i < N && i < movieArr.length; i++) 
@@ -136,7 +153,21 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 	public Person[] searchMostActiveActors(Integer N) {
 		Stream<Person> actors = personMap.valueList().stream().filter(p -> p.getRole() == PersonRole.actor);
 		Person[] personArr = actors.toArray(Person[]::new);
-		Algorithms.quickSort(personArr, Algorithms.N_MOVIES.reversed());
+		switch (selectedAlg) 
+		{
+			case QuickSort: 
+			{
+				Algorithms.quickSort(personArr, Algorithms.N_MOVIES.reversed());
+				break;
+			}
+			case InsertionSort:
+			{
+				Algorithms.InsertionSort(personArr, Algorithms.N_MOVIES.reversed());
+				break;
+			}
+			default:
+				throw new IllegalArgumentException("Unexpected value: " + selectedAlg);
+		}
 		Person[] toReturn = new Person[(N <= personArr.length)? N : personArr.length];
 		for (int i = 0; i < N && i < personArr.length; i++) 
 		{
@@ -209,12 +240,12 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 
 	@Override
 	public int countMovies() {
-		return movieMap.length();
+		return movieMap.size();
 	}
 
 	@Override
 	public int countPeople() {
-		return personMap.length();
+		return personMap.size();
 	}
 
 	@Override
@@ -251,7 +282,7 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 
 	@Override
 	public Movie[] getAllMovies() {
-		Movie[] arr = new Movie[movieMap.length()];
+		Movie[] arr = new Movie[movieMap.size()];
 		int i = 0;
 		for (Map<String, Movie>.Entry e : movieMap.entrySet()) 
 		{
@@ -262,7 +293,7 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 
 	@Override
 	public Person[] getAllPeople() {
-		Person[] arr = new Person[personMap.length()];
+		Person[] arr = new Person[personMap.size()];
 		int i = 0;
 		for (Map<String, Person>.Entry e : personMap.entrySet()) 
 		{
@@ -280,7 +311,7 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 				selectedAlg = SortingAlgorithm.QuickSort;
 				try 
 				{
-					lc.overrideAlg(file, "QuickSort");
+					confingMan.overrideAlg(configFile, "QuickSort");
 				} 
 				catch (IOException e) 
 				{
@@ -290,10 +321,10 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 			}
 			case InsertionSort: 
 			{
-				selectedAlg = SortingAlgorithm.SelectionSort;
+				selectedAlg = SortingAlgorithm.InsertionSort;
 				try 
 				{
-					lc.overrideAlg(file, "InsertionSort");
+					confingMan.overrideAlg(configFile, "InsertionSort");
 				} 
 				catch (IOException e) 
 				{
@@ -317,7 +348,7 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 				lff.setMap(MapImplementation.ArrayOrdinato);
 				try 
 				{
-					lc.overrideMap(file, "ArrayOrdinato");
+					confingMan.overrideMap(configFile, "ArrayOrdinato");
 				} 
 				catch (IOException e) 
 				{
@@ -332,7 +363,7 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 				lff.setMap(MapImplementation.HashIndirizzamentoAperto);
 				try 
 				{
-					lc.overrideMap(file, "HashIndirizzamentoAperto");
+					confingMan.overrideMap(configFile, "HashIndirizzamentoAperto");
 				} 
 				catch (IOException e) 
 				{
