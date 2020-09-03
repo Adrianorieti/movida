@@ -13,7 +13,6 @@ import movida.commons.Person;
 public class MovidaGraph {
 	
 	List<Collaboration> collaborationList;
-	//Map<String, Person> persons;
 	
 	public MovidaGraph(Map<String, Movie> movies, Map<String, Person> persons) {
 		this.collaborationList = new ArrayList<Collaboration>();
@@ -42,6 +41,7 @@ public class MovidaGraph {
 			}
 		}
 	}
+	
 	
 	
 	public void addCollaboration(Person p1, Person p2, Movie m) {
@@ -74,5 +74,13 @@ public class MovidaGraph {
 		return collaborationList;
 	}
 
+	
+
+	public void removeMovieFromCollabs(Movie m) {
+		for (Collaboration c : collaborationList)
+		{
+			c.removeMovie(m);
+		}
+	}
 	
 }

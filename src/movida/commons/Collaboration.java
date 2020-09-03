@@ -36,7 +36,9 @@ public class Collaboration {
 		return score / movies.size();
 	}
 	
-	
+	public void removeMovie(Movie m) {
+		movies.remove(m);
+	}
 	
 	@Override
 	public String toString() {
