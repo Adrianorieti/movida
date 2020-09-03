@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -40,8 +39,10 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 	@Override
 	public Movie[] searchMoviesByTitle(String title) {
 		ArrayList<Movie> l = new ArrayList<Movie>();
-		for (Map<String, Movie>.Entry e : movieMap.entrySet()) {
-			if (e.key.contains(title)) {
+		for (Map<String, Movie>.Entry e : movieMap.entrySet()) 
+		{
+			if (e.key.contains(title)) 
+			{
 				l.add(e.getValue());
 			}
 		}
@@ -50,39 +51,48 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 
 	@Override
 	public Movie[] searchMoviesInYear(Integer year) {
-		ArrayList<Movie> l = new ArrayList<Movie>();
-		for (Map<String, Movie>.Entry e : movieMap.entrySet()) {
-			if (e.getValue().getYear().equals(year)) {
-				l.add(e.getValue());
+		ArrayList<Movie> toReturn = new ArrayList<Movie>();
+		for (Map<String, Movie>.Entry e : movieMap.entrySet()) 
+		{
+			if (e.getValue().getYear().equals(year)) 
+			{
+				toReturn.add(e.getValue());
 			}
 		}
-		return l.toArray(new Movie[l.size()]);
+		return toReturn.toArray(new Movie[toReturn.size()]);
 	}
 
 	@Override
 	public Movie[] searchMoviesDirectedBy(String name) {
-		ArrayList<Movie> l = new ArrayList<Movie>();
-		for (Map<String, Movie>.Entry e : movieMap.entrySet()) {
-			if (e.getValue().getDirector().getName().equals(name.trim().toLowerCase())) {
-				l.add(e.getValue());
+		ArrayList<Movie> toReturn = new ArrayList<Movie>();
+		for (Map<String, Movie>.Entry e : movieMap.entrySet()) 
+		{
+			if (e.getValue().getDirector().getName().equals(name.trim().toLowerCase())) 
+			{
+				toReturn.add(e.getValue());
 			}
 		}
-		return l.toArray(new Movie[l.size()]);
+		return toReturn.toArray(new Movie[toReturn.size()]);
+//		return getPersonByName(name).getMovies().toArray(Movie[]::new );
 	}
 
 	@Override
 	public Movie[] searchMoviesStarredBy(String name) {
-		ArrayList<Movie> l = new ArrayList<Movie>();
-		for (Map<String, Movie>.Entry e : movieMap.entrySet()) {
+		ArrayList<Movie> toReturn = new ArrayList<Movie>();
+		for (Map<String, Movie>.Entry e : movieMap.entrySet()) 
+		{
 			Movie m = e.getValue();
-			for (Person p : m.getCast()) {
-				if (p.getName().equals(name.trim().toLowerCase())) {
-					l.add(e.getValue());
+			for (Person p : m.getCast()) 
+			{
+				if (p.getName().equals(name.trim().toLowerCase())) 
+				{
+					toReturn.add(e.getValue());
 					break;
 				}
 			}
 		}
-		return l.toArray(new Movie[l.size()]);
+		return toReturn.toArray(new Movie[toReturn.size()]);	
+//		return getPersonByName(name).getMovies().toArray(Movie[]::new );
 	}
 
 	@Override
@@ -90,8 +100,9 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 		ArrayList<Movie> movieList = movieMap.valueList();
 		Movie[] movieArr = movieList.toArray(new Movie[movieList.size()]);
 		Algorithms.quickSort(movieArr, Algorithms.VOTES.reversed());
-		Movie[] toReturn = new Movie[N];
-		for (int i = 0; i < N; i++) {
+		Movie[] toReturn = new Movie[(N <= movieArr.length)? N : movieArr.length];
+		for (int i = 0; i < N && i < movieArr.length; i++) 
+		{
 			toReturn[i] = movieArr[i];
 		}
 		return toReturn;
@@ -101,9 +112,21 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 	public Movie[] searchMostRecentMovies(Integer N) {
 		ArrayList<Movie> movieList = movieMap.valueList();
 		Movie[] movieArr = movieList.toArray(new Movie[movieList.size()]);
-		Algorithms.quickSort(movieArr, Algorithms.RECENT.reversed());
-		Movie[] toReturn = new Movie[N];
-		for (int i = 0; i < N; i++) {
+		switch (selectedAlg) {
+		case QuickSort: {
+			Algorithms.quickSort(movieArr, Algorithms.RECENT.reversed());
+			break;
+		}
+		case InsertionSort: {
+			Algorithms.InsertionSort(movieArr, Algorithms.RECENT.reversed());
+			break;
+		}
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + selectedAlg);
+		}
+		Movie[] toReturn = new Movie[(N <= movieArr.length)? N : movieArr.length];
+		for (int i = 0; i < N && i < movieArr.length; i++) 
+		{
 			toReturn[i] = movieArr[i];
 		}
 		return toReturn;
@@ -114,28 +137,32 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 		Stream<Person> actors = personMap.valueList().stream().filter(p -> p.getRole() == PersonRole.actor);
 		Person[] personArr = actors.toArray(Person[]::new);
 		Algorithms.quickSort(personArr, Algorithms.N_MOVIES.reversed());
-		Person[] toReturn = new Person[N];
-		for (int i = 0; i < N; i++) {
+		Person[] toReturn = new Person[(N <= personArr.length)? N : personArr.length];
+		for (int i = 0; i < N && i < personArr.length; i++) 
+		{
 			toReturn[i] = personArr[i];
 		}
 		return toReturn;
 	}
 
 	@Override
-	public void loadFromFile(File f) {
+	public void loadFromFile(File f) throws MovidaFileException {
 		
 		LoadFromFile temp = new LoadFromFile();
 		temp.setMap(selectedMap);
-		try {
+		try 
+		{
 			temp.load(f);
-		} catch (MovidaFileException fe) {
-			fe.printStackTrace();
-			return;
-		} catch (FileNotFoundException e) {
+		} 
+		catch (FileNotFoundException e) 
+		{
+			throw new MovidaFileException();
+		}
+		catch (IllegalArgumentException e)
+		{
 			e.printStackTrace();
 			return;
 		}
-		// TODO rivedere qui
 		lff = temp;
 		movieMap = lff.getMovieMap();
 		personMap = lff.getPersonMap();
@@ -144,35 +171,32 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 	}
 
 	@Override
-	public void saveToFile(File f) {
-
-		try {
+	public void saveToFile(File f) throws MovidaFileException {
+		try 
+		{
 			FileWriter save = new FileWriter(f);
-			for (Map<String, Movie>.Entry e : movieMap.entrySet()) {
+			for (Map<String, Movie>.Entry e : movieMap.entrySet()) 
+			{
 				save.append("Title:" + "\t" + e.value.getTitle() + "\n");
-
 				save.append("Year:" + "\t" + e.value.getYear() + "\n");
-
 				save.append("Director:" + "\t" + e.value.getDirector().getName() + "\n");
-
 				Person cast[] = e.value.getCast();
 				save.append("Cast:" + "\t");
-				for (int i = 0; i < cast.length; i++) {
+				for (int i = 0; i < cast.length; i++) 
+				{
 					if (i == cast.length - 1)
-						save.append(cast[i].getName() + "\n"); // l'ultimo elemento non ha la virgola
+						save.append(cast[i].getName() + "\n");
 					else
 						save.append(cast[i].getName() + "," + "\t");
 				}
-
 				save.append("Votes" + "\t" + e.value.getVotes() + "\n");
 				save.append("\n");
-
 			}
-
 			save.close();
-		} catch (IOException e) {
-			System.out.println("Impossibile aprire il file.");
-			e.printStackTrace();
+		} 
+		catch (IOException e) 
+		{
+			throw new MovidaFileException();
 		}
 	}
 
@@ -180,6 +204,7 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 	public void clear() {
 		movieMap.clear();
 		personMap.clear();
+		graph = null;
 	}
 
 	@Override
@@ -194,10 +219,21 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 
 	@Override
 	public boolean deleteMovieByTitle(String title) {
-		try {
+		try 
+		{
+			//TODO testare attentamente
+			Movie m = getMovieByTitle(title);
+			graph.removeMovieFromCollabs(m);
+			m.getDirector().getMovies().remove(m);
+			for (Person p : m.getCast())
+			{
+				p.getMovies().remove(m);
+			}
 			movieMap.delete(title);
 			return true;
-		} catch (MovidaKeyException e) {
+		} 
+		catch (MovidaKeyException e) 
+		{
 			e.printStackTrace();
 			return false;
 		}
@@ -211,14 +247,14 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 	@Override
 	public Person getPersonByName(String name) {
 		return personMap.search(name.trim().toLowerCase());
-
 	}
 
 	@Override
 	public Movie[] getAllMovies() {
 		Movie[] arr = new Movie[movieMap.length()];
 		int i = 0;
-		for (Map<String, Movie>.Entry e : movieMap.entrySet()) {
+		for (Map<String, Movie>.Entry e : movieMap.entrySet()) 
+		{
 			arr[i++] = e.getValue();
 		}
 		return arr;
@@ -228,7 +264,8 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 	public Person[] getAllPeople() {
 		Person[] arr = new Person[personMap.length()];
 		int i = 0;
-		for (Map<String, Person>.Entry e : personMap.entrySet()) {
+		for (Map<String, Person>.Entry e : personMap.entrySet()) 
+		{
 			arr[i++] = e.getValue();
 		}
 		return arr;
@@ -244,10 +281,10 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 				try 
 				{
 					lc.overrideAlg(file, "QuickSort");
-				} catch (IOException e) 
+				} 
+				catch (IOException e) 
 				{
-					System.out.print("File not found");
-					e.printStackTrace();
+					throw new MovidaFileException();
 				}
 				return true;
 			}
@@ -257,10 +294,10 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 				try 
 				{
 					lc.overrideAlg(file, "InsertionSort");
-				} catch (IOException e) 
+				} 
+				catch (IOException e) 
 				{
-					System.out.print("File not found");
-					e.printStackTrace();
+					throw new MovidaFileException();
 				}
 				return true;
 			}
@@ -270,7 +307,6 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 		}
 	}
 
-	// TODO fixare new
 	@Override
 	public boolean setMap(MapImplementation m) {
 		switch (m) 
@@ -282,10 +318,10 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 				try 
 				{
 					lc.overrideMap(file, "ArrayOrdinato");
-				} catch (IOException e) 
+				} 
+				catch (IOException e) 
 				{
-					System.out.print("File not found");
-					e.printStackTrace();
+					throw new MovidaFileException();
 				}
 				return true;
 			}
@@ -297,10 +333,10 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 				try 
 				{
 					lc.overrideMap(file, "HashIndirizzamentoAperto");
-				} catch (IOException e) 
+				} 
+				catch (IOException e) 
 				{
-					System.out.print("File not found");
-					e.printStackTrace();
+					throw new MovidaFileException();
 				}
 				return true;
 			}
@@ -312,9 +348,10 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 
 	@Override
 	public Person[] getDirectCollaboratorsOf(Person actor) {
-		ArrayList<Collaboration> collabList = personMap.search(actor.getName()).getCollabs();
+		ArrayList<Collaboration> collabList = actor.getCollabs();
 		ArrayList<Person> toReturn = new ArrayList<Person>();
-		for (Collaboration c : collabList) {
+		for (Collaboration c : collabList) 
+		{
 			toReturn.add(actor.collaborator(c));
 		}
 		return toReturn.toArray(Person[]::new);
@@ -328,13 +365,16 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 		fringe.add(actor);
 		marked.put(actor, true);
 
-		while (!fringe.isEmpty()) {
+		while (!fringe.isEmpty()) 
+		{
 			Person p = fringe.remove();
-			for (Collaboration c : p.getCollabs()) {
+			for (Collaboration c : p.getCollabs()) 
+			{
 				Person toAdd;
 				toAdd = (!c.getActorA().equals(p)) ? c.getActorA() : c.getActorB();
 
-				if (!marked.containsKey(toAdd) || marked.get(toAdd) == false) {
+				if (!marked.containsKey(toAdd) || marked.get(toAdd) == false) 
+				{
 					fringe.add(toAdd);
 					marked.put(toAdd, true);
 					toReturn.add(toAdd);
@@ -419,12 +459,4 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 		return toReturn.toArray(Collaboration[]::new);
 	}
 
-	public void loadConfig(File f) throws MovidaFileException, FileNotFoundException {
-		Scanner scan = new Scanner(f);
-		while (scan.hasNextLine()) {
-			// selectedMap = scan.nextLine();
-			// selectedAlg = scan.nextLine();
-		}
-		scan.close();
-	}
 }
