@@ -3,7 +3,6 @@ package pacecorradetti;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,18 +12,23 @@ import java.util.Set;
  */
 
 
-public class ArrayOrdinato<K extends Comparable<K>, V extends Object> extends pacecorradetti.Map<K, V>{
+public class ArrayOrdinato<K extends Comparable<K>, V> extends pacecorradetti.Map<K, V>{
 	
 	private Entry[] array;
 	private int lastIndex;
 	
 
 	
+	@SuppressWarnings("unchecked")		
+	/* L'array è creato con classe Entry ed il cast è sicuramento dello stesso tipo. I tipi dei membri di Entry sono stabilite 
+	 * nel momento in cui ArrayOrdinato viene instanziato
+	 */
 	public ArrayOrdinato(int length) {
 		array = (Entry[]) Array.newInstance(Entry.class , length);
 		lastIndex = -1;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public ArrayOrdinato() {
 		array = (Entry[]) Array.newInstance(Entry.class , 1);
 		lastIndex = -1;
@@ -73,6 +77,7 @@ public class ArrayOrdinato<K extends Comparable<K>, V extends Object> extends pa
 			}
 			else
 			{
+				@SuppressWarnings("unchecked")
 				Entry temp[] = (Entry[]) Array.newInstance(Entry.class , array.length * 2);
 				
 				for (int j = 0; j < i; j++ ) 
@@ -96,6 +101,7 @@ public class ArrayOrdinato<K extends Comparable<K>, V extends Object> extends pa
 		if (i > lastIndex) return;					
 		if (lastIndex - 1 < array.length / 2)
 		{
+			@SuppressWarnings("unchecked")
 			Entry temp[] = (Entry[]) Array.newInstance(Entry.class , array.length / 2);
 			for (int j = 0; j < i; j++) 
 			{				
@@ -197,6 +203,7 @@ public class ArrayOrdinato<K extends Comparable<K>, V extends Object> extends pa
 			}
 			else
 			{
+				@SuppressWarnings("unchecked")
 				Entry temp[] = (Entry[]) Array.newInstance(Entry.class , array.length * 2);
 				
 				for (int j = 0; j < i; j++ ) 
@@ -209,10 +216,6 @@ public class ArrayOrdinato<K extends Comparable<K>, V extends Object> extends pa
 			}
 			lastIndex++;
 		}
-		
-		
-			
-		
 	}
 
 	@Override
