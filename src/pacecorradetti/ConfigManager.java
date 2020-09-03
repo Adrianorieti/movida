@@ -10,18 +10,18 @@ import movida.commons.MapImplementation;
 import movida.commons.MovidaFileException;
 import movida.commons.SortingAlgorithm;
 
-public class loadConfig {
+public class ConfigManager {
 
 	String Map = null;
 	String Algorithm =null;
 	String line = null;
 
-	public loadConfig(File f) throws MovidaFileException, FileNotFoundException {
+	public ConfigManager(File f) throws FileNotFoundException {
 		Scanner scan = new Scanner(f);
-			line = scan.nextLine();
-			Algorithm = formatLine(line);
-			line = scan.nextLine();
-			Map = formatLine(line);
+		line = scan.nextLine();
+		Algorithm = formatLine(line);
+		line = scan.nextLine();
+		Map = formatLine(line);
 		scan.close();
 	}
 	
@@ -55,6 +55,7 @@ public class loadConfig {
 			throw new MovidaFileException();
 	}
 	
+	
 	public void overrideAlg(File file,String algo) throws IOException {
 		Scanner scan = new Scanner(file);
 			line = scan.nextLine();
@@ -65,8 +66,9 @@ public class loadConfig {
 		write.append("sorting_algorithm=" + algo +"\n");
 		write.append("map_implementation=" + Map);
 		write.close();
-		
 	}
+	
+	
 	public void overrideMap(File file,String map) throws IOException {
 		Scanner scan = new Scanner(file);
 		line = scan.nextLine();
@@ -76,8 +78,8 @@ public class loadConfig {
 		write.append("sorting_algorithm=" + Algorithm +"\n");
 		write.append("map_implementation=" + map);
 		write.close();
-		
 	}
+	
 	
 	protected String formatLine(String line) {
 		int index = line.indexOf('=');
