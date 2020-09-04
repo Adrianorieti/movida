@@ -24,24 +24,23 @@ public class Algorithms {
 		int i = low, j = high + 1;
 		int m = ThreadLocalRandom.current().nextInt(i, j);
 		K pivot = array[m];
-
 		swap(array, low, m);
 
-		while (i < j) {
-			do {
+		while (i < j) 
+		{
+			do 
+			{
 				i++;
 			} while (array[i].compareTo(pivot) < 0 && i < high);
-			do {
+			do 
+			{
 				j--;
 			} while (array[j].compareTo(pivot) > 0 && j > low);
 			if (i < j) {
 				swap(array, i, j);
 			}
-
 		}
-
 		swap(array, low, j);
-
 		return j;
 	}
 
@@ -61,59 +60,81 @@ public class Algorithms {
 		int i = low, j = high + 1;
 		int m = ThreadLocalRandom.current().nextInt(i, j);
 		K pivot = array[m];
-
 		swap(array, low, m);
 
-		while (i < j) {
-			do {
+		while (i < j) 
+		{
+			do 
+			{
 				i++;
 			} while (c.compare(array[i], pivot) < 0 && i < high);
-			do {
+			do 
+			{
 				j--;
 			} while (c.compare(array[j], pivot) > 0 && j > low);
-			if (i < j) {
+			if (i < j) 
+			{
 				swap(array, i, j);
 			}
 
 		}
-
 		swap(array, low, j);
-
 		return j;
 	}
 
 	
 	public static <K extends Comparable<K>> void InsertionSort(K A[]) {
-		for (int k = 1; k <= A.length - 1; k++) 
+		for (int i = 1; i <= A.length - 1; i++) 
 		{
 			int j = 0;
-			K x = A[k];
-			for (j = 0; j < k; j++)
+			K x = A[i]; 
+			for (j = 0; j < i; j++)
 				if (A[j].compareTo(x) > 0)
 					break;
-			if (j < k) 
+			if (j < i) 
 			{
-				for (int t = k; t > j; t--)
-					A[t] = A[t - 1];
+				for (int t = i; t > j; t--) 
+				{
+					A[t] = A[t - 1];					
+				}
 				A[j] = x;
 			}
 		}
+//		for (int i = 0; i < A.length; i ++)
+//		{
+//			int j = i;
+//			while (j > 0 && A[j-1].compareTo(A[j]) > 0 )
+//			{
+//				swap(A, j, j-1);
+//				j = j - 1;
+//			}
+//		}
 	}
-	  
+	
+	
 	public static <K> void InsertionSort(K A[], Comparator<K> c) {
-		for (int k = 1; k <= A.length - 1; k++) 
+		for (int i = 1; i <= A.length - 1; i++) 
 		{
 			int j = 0;
-			K x = A[k];
-			for (j = 0; j < k; j++)
+			K x = A[i];
+			for (j = 0; j < i; j++)
 				if (c.compare(A[j], x) > 0)
 					break;
-			if (j < k) {
-				for (int t = k; t > j; t--)
+			if (j < i) {
+				for (int t = i; t > j; t--)
 					A[t] = A[t - 1];
 				A[j] = x;
 			}
 		}
+//		for (int i = 0; i < A.length; i ++)
+//		{
+//			int j = i;
+//			while (j > 0 && c.compare(A[j-1], A[j]) > 0 )
+//			{
+//				swap(A, j, j-1);
+//				j = j - 1;
+//			}
+//		}
 	}
 	 
 
