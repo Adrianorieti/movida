@@ -49,7 +49,10 @@ public class LoadFromFile {
 				break;
 			}
 			default:
-				new IllegalArgumentException("Unexpected value: " + selectedMap).printStackTrace();
+			{
+				scan.close();
+				throw new IllegalArgumentException("Unexpected value: " + selectedMap + ". Loading failed");
+			}	
 		}
 		
 		
@@ -89,7 +92,7 @@ public class LoadFromFile {
 			Person[] castArray = cast.toArray(new Person[cast.size()]);
 			Movie movieToAdd = new Movie(title, year, votes, castArray, director);
 			
-			//popola lista di film per ogni attore
+			director.getMovies().add(movieToAdd);		//popola lista di film per attori e registi
 			for (Person p : movieToAdd.getCast())
 			{
 				p.getMovies().add(movieToAdd);
@@ -105,7 +108,6 @@ public class LoadFromFile {
 		scan.close();	
 	}
 
-	
 	
 	private String formatLine(String line) {
 		int index = line.indexOf(':');
