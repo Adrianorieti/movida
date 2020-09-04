@@ -1,0 +1,3 @@
+#default values
+sortingAlgorithm = QuickSort
+mapImplementation = HashIndirizzamentoAperto

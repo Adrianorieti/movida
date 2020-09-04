@@ -1,0 +1,4 @@
+#User-selected properties
+#Fri Sep 04 14:27:39 CEST 2020
+sortingAlgorithm=InsertionSort
+mapImplementation=ArrayOrdinato

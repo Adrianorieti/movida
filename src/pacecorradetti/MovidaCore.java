@@ -1,7 +1,9 @@
 package pacecorradetti;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayDeque;
@@ -9,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 import java.util.Queue;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -16,24 +19,29 @@ import java.util.stream.Stream;
 import movida.commons.*;
 
 public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMovidaCollaborations {
+	
 	LoadFromFile lff;
-	MapImplementation selectedMap = MapImplementation.ArrayOrdinato;
-	SortingAlgorithm selectedAlg = SortingAlgorithm.QuickSort;
+	MapImplementation selectedMap;
+	SortingAlgorithm selectedAlg;
 	Map<String, Movie> movieMap;
 	Map<String, Person> personMap;
 	MovidaGraph graph;
-
-	File configFile ;
-	ConfigManager confingMan ;
+	Properties userProps;
 
 	public MovidaCore() {
-		configFile = new File("config.ini");
 		try 
 		{
-			confingMan = new ConfigManager(configFile);
-		} catch (MovidaFileException | FileNotFoundException e) {
+			loadProperties();
+		} 
+		catch (MovidaFileException | IOException e) 
+		{
 			e.printStackTrace();
+			selectedMap = MapImplementation.HashIndirizzamentoAperto;
+			selectedAlg = SortingAlgorithm.QuickSort;
 		}
+		
+		Runtime.getRuntime().addShutdownHook(new saveOnShutdownThread());	
+
 	}
 
 	@Override
@@ -304,77 +312,24 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 
 	@Override
 	public boolean setSort(SortingAlgorithm a) {
-		switch (a) 
+		if (a != SortingAlgorithm.QuickSort && a != SortingAlgorithm.InsertionSort) 
 		{
-			case QuickSort: 
-			{
-				selectedAlg = SortingAlgorithm.QuickSort;
-				try 
-				{
-					confingMan.overrideAlg(configFile, "QuickSort");
-				} 
-				catch (IOException e) 
-				{
-					throw new MovidaFileException();
-				}
-				return true;
-			}
-			case InsertionSort: 
-			{
-				selectedAlg = SortingAlgorithm.InsertionSort;
-				try 
-				{
-					confingMan.overrideAlg(configFile, "InsertionSort");
-				} 
-				catch (IOException e) 
-				{
-					throw new MovidaFileException();
-				}
-				return true;
-			}
-			default:
-				new IllegalArgumentException("Unexpected value: " + a + "; Algorithm unchanged").printStackTrace();
-				return false;
+			return false;
 		}
+		selectedAlg = a;
+		userProps.setProperty("sortingAlgorithm", a.name());
+		return true;
 	}
 
 	@Override
 	public boolean setMap(MapImplementation m) {
-		switch (m) 
+		if (m != MapImplementation.HashIndirizzamentoAperto && m != MapImplementation.ArrayOrdinato) 
 		{
-			case ArrayOrdinato: 
-			{
-				selectedMap = MapImplementation.ArrayOrdinato;
-				lff.setMap(MapImplementation.ArrayOrdinato);
-				try 
-				{
-					confingMan.overrideMap(configFile, "ArrayOrdinato");
-				} 
-				catch (IOException e) 
-				{
-					throw new MovidaFileException();
-				}
-				return true;
-			}
-			case HashIndirizzamentoAperto: 
-			{
-				
-				selectedMap = MapImplementation.HashIndirizzamentoAperto;
-				lff.setMap(MapImplementation.HashIndirizzamentoAperto);
-				try 
-				{
-					confingMan.overrideMap(configFile, "HashIndirizzamentoAperto");
-				} 
-				catch (IOException e) 
-				{
-					throw new MovidaFileException();
-				}
-				return true;
-			}
-			default:
-				new IllegalArgumentException("Unexpected value: " + "; Map unchanged");
-				return false;
+			return false;
 		}
+		selectedMap = m;
+		userProps.setProperty("mapImplementation", m.name());
+		return true;
 	}
 
 	@Override
@@ -417,6 +372,8 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 
 	@Override
 	public Collaboration[] maximizeCollaborationsInTheTeamOf(Person actor) {
+
+		
 //		HashMap<Person, Double> score = new HashMap<Person, Double>();
 //		HashMap<Person, Collaboration> bestCollab = new HashMap<Person, Collaboration>();
 //		PriorityQueue<Person> toProcess = new PriorityQueue<Person>((a, b) -> score.get(a).compareTo(score.get(b)));
@@ -490,4 +447,38 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 		return toReturn.toArray(Collaboration[]::new);
 	}
 
+	private void loadProperties() throws IOException {
+		Properties defaultProps = new Properties();
+		FileInputStream in = new FileInputStream("defaultProperties.txt");
+		defaultProps.load(in);
+		in.close();
+		
+		userProps = new Properties(defaultProps);
+		in = new FileInputStream("userProperties.txt");
+		userProps.load(in);
+		in.close();
+		
+		String prop = userProps.getProperty("sortingAlgorithm");
+		selectedAlg = SortingAlgorithm.valueOf(SortingAlgorithm.class, prop);
+		prop = userProps.getProperty("mapImplementation");
+		selectedMap = MapImplementation.valueOf(MapImplementation.class, prop);
+	}
+
+	private void saveProperties() throws IOException {
+		FileOutputStream out = new FileOutputStream("userProperties.txt");
+		userProps.store(out, "User-selected properties");
+	}
+
+	private class saveOnShutdownThread extends Thread implements Runnable {
+		@Override
+		public void run() {
+			try {
+				saveProperties();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 }
+	
