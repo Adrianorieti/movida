@@ -28,6 +28,8 @@ public class ArrayOrdinato<K extends Comparable<K>, V> extends pacecorradetti.Ma
 		lastIndex = -1;
 	}
 	
+	
+	
 	@SuppressWarnings("unchecked")
 	public ArrayOrdinato() {
 		array = (Entry[]) Array.newInstance(Entry.class , 1);
@@ -37,19 +39,27 @@ public class ArrayOrdinato<K extends Comparable<K>, V> extends pacecorradetti.Ma
 		
 	
 	private int locationOf(K key) {
-		return locationOf(key, 0, length());
+		return locationOf(key, 0, size());
 	}
 	
 	private int locationOf(K key, int low, int up) {
 		int pivot = (low + up) / 2;
 		if (array[pivot].key.equals(key)) 
-			return pivot;
-		else if (up - low <= 1)
-			return (array[pivot].key.compareTo(key) < 0)? pivot + 1: pivot;
-		else if (array[pivot].key.compareTo(key) > 0)
-			return locationOf(key, low, pivot);
+		{
+			return pivot;	
+		}
+		else if (up - low <= 1) 
+		{
+			return (array[pivot].key.compareTo(key) < 0)? pivot + 1: pivot;			
+		}
+		else if (array[pivot].key.compareTo(key) > 0) 
+		{
+			return locationOf(key, low, pivot);			
+		}
 		else 
+		{
 			return locationOf(key, pivot, up);
+		}
 	}
 	
 	@Override
@@ -96,7 +106,10 @@ public class ArrayOrdinato<K extends Comparable<K>, V> extends pacecorradetti.Ma
 	public void delete(K key) throws MovidaKeyException  {
 		
 		int i = locationOf(key);
-		if (!array[i].key.equals(key)) throw new MovidaKeyException();
+		if (!array[i].key.equals(key)) 
+		{
+			throw new MovidaKeyException();
+		}
 		
 		if (i > lastIndex) return;					
 		if (lastIndex - 1 < array.length / 2)
@@ -111,9 +124,7 @@ public class ArrayOrdinato<K extends Comparable<K>, V> extends pacecorradetti.Ma
 			{
 				temp[j-1] = array[j];				
 			}
-			
 			array = temp;
-
 		}
 		else 
 		{
@@ -141,7 +152,7 @@ public class ArrayOrdinato<K extends Comparable<K>, V> extends pacecorradetti.Ma
 	}
 
 	@Override
-	public int length() {
+	public int size() {
 		return lastIndex + 1;
 	}
 	
@@ -160,7 +171,7 @@ public class ArrayOrdinato<K extends Comparable<K>, V> extends pacecorradetti.Ma
 	@Override
 	public Set<Map<K, V>.Entry> entrySet() {
 		Set<Map<K, V>.Entry> temp = new HashSet<Map<K,V>.Entry>();
-		for (int i = 0; i < length(); i++)
+		for (int i = 0; i < size(); i++)
 		{
 			temp.add(array[i]);
 		}
@@ -170,7 +181,7 @@ public class ArrayOrdinato<K extends Comparable<K>, V> extends pacecorradetti.Ma
 	
 	public ArrayList<V> valueList() {
 		ArrayList<V> temp = new ArrayList<V>();
-		for (int i = 0; i < length(); i++)
+		for (int i = 0; i < size(); i++)
 		{
 			temp.add(array[i].getValue());
 		}

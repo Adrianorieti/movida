@@ -45,6 +45,6 @@ abstract class Map<K extends Comparable<K>, V extends Object> {
 	public abstract void putIfAbsent(K key, V value);
 
 	
-	abstract public int length();
+	abstract public int size();
 	
 }

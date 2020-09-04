@@ -38,8 +38,12 @@ public class HashIndirizzamentoAperto<K extends Comparable<K>,V extends Object> 
 	{
 		int hash = Math.abs(key.hashCode() % length);
 		if(m[hash].key.equals(key)) return (V) (m[hash].value);
-		else if(m[hash] == null) return null;
-		else {
+		else if(m[hash] == null) 
+		{
+			return null;
+		}
+		else 
+		{
 			for(int i=0;i < m.length;i++) 
 			{
 				int hash2 =  Math.abs((hash + (i * ( key.hashCode() + 1))) % length) ;
@@ -58,7 +62,10 @@ public class HashIndirizzamentoAperto<K extends Comparable<K>,V extends Object> 
 		{ 
 			m[hash].value = (V) deleted;
 		}
-		else if(m[hash] == null) throw new MovidaKeyException();
+		else if(m[hash] == null) 
+		{
+			throw new MovidaKeyException();
+		}
 		else if(m[hash].value == deleted)
 		{
 			for(int i=0;i < m.length;i++) 
@@ -68,7 +75,7 @@ public class HashIndirizzamentoAperto<K extends Comparable<K>,V extends Object> 
 				{
 					m[hash2].value = (V) deleted;
 				}
-		}
+			}
 		}
 	}
 	
@@ -122,7 +129,7 @@ public class HashIndirizzamentoAperto<K extends Comparable<K>,V extends Object> 
 	
 	public ArrayList<V> valueList() {
 		ArrayList<V> temp = new ArrayList<V>();
-		for (int i = 0; i < length(); i++)
+		for (int i = 0; i < size(); i++)
 		{
 			temp.add(m[i].getValue());
 		}
@@ -158,7 +165,7 @@ public class HashIndirizzamentoAperto<K extends Comparable<K>,V extends Object> 
 		
 	}
 	@Override
-	public int length() {
+	public int size() {
 		return m.length;
 	}
 	@Override
