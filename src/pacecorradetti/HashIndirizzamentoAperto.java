@@ -6,23 +6,25 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class HashIndirizzamentoAperto<K extends Comparable<K>,V extends Object> extends Map<K,V> {
+public class HashIndirizzamentoAperto<K extends Comparable<K>,V> extends pacecorradetti.Map<K,V> {
 
 	 
-	protected Entry[] m;
+	private Entry[] m;
 	private static Object deleted;
 	private int length = 0;
 	
+	@SuppressWarnings("unchecked")
 	public HashIndirizzamentoAperto(int l)
 	{
-		this.length = Math.abs(l);
-		m =  ((Entry[]) Array.newInstance(Entry.class , length));
+		this.length = l;
+		m =  (Entry[]) Array.newInstance(Entry.class , length);
 		for(int i =0;i < m.length;i++) 
 		{
 			m[i] = null;
 		}
 		HashIndirizzamentoAperto.deleted = new Object();
 	}
+	
 	public void printHash()
 	{
 		for(int i =0; i< m.length;i++)
@@ -40,7 +42,7 @@ public class HashIndirizzamentoAperto<K extends Comparable<K>,V extends Object> 
 		if(m[hash].key.equals(key)) return (V) (m[hash].value);
 		else if(m[hash] == null) 
 		{
-			return null;
+			throw new MovidaKeyException();
 		}
 		else 
 		{
@@ -54,6 +56,7 @@ public class HashIndirizzamentoAperto<K extends Comparable<K>,V extends Object> 
 		throw new MovidaKeyException();
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void delete(K key) throws MovidaKeyException
 	{
@@ -88,7 +91,7 @@ public class HashIndirizzamentoAperto<K extends Comparable<K>,V extends Object> 
 			m[hash] = new Entry(key,value) ;
 			
 		}
-		else if(m[hash].key == key)
+		else if(m[hash].key.equals(key))
 		{
 			m[hash].value = value; // sovrascrive l'oggetto
 		}
@@ -121,7 +124,10 @@ public class HashIndirizzamentoAperto<K extends Comparable<K>,V extends Object> 
 		Set<Map<K, V>.Entry> temp = new HashSet<Map<K,V>.Entry>();
 		for (Map<K, V>.Entry e : m)
 		{
+			if(e != null)
+			{
 			temp.add(e);
+			}
 		}
 		return temp;
 	}
@@ -145,7 +151,7 @@ public class HashIndirizzamentoAperto<K extends Comparable<K>,V extends Object> 
 			m[hash] = new Entry(key,value) ;
 			
 		}
-		else if(m[hash].key == key)
+		else if(m[hash].key.equals(key))
 		{
 			return; 
 		}
