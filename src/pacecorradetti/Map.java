@@ -5,7 +5,7 @@ import java.util.Set;
 
 
 /**
- * Definisce una classe astratta utilizzata dalle strutture dati
+ * Classe ereditata dalle classi dizionario
  */
 abstract class Map<K extends Comparable<K>, V extends Object> {
 	
@@ -40,39 +40,39 @@ abstract class Map<K extends Comparable<K>, V extends Object> {
 	abstract public void put(K key, V value);
 
 	/**
-	 * Cancella l'elemento corrispondete al
+	 * Cancella l'elemento associato alla chiave <code>K</code>
 	 * @param key
 	 */
 	abstract void delete(K key) throws MovidaKeyException;
 	
 	/**
-	 * Effettua una ricerca dell'elemento corrispondente al
+	 * Effettua una ricerca dell'elemento associato alla chiave <code>K</code>
 	 * @param key
 	 * @return <V> Object
 	 */
 	abstract public V search(K key) throws MovidaKeyException;
 
 	/**
-	 * Imposta a null ogni area di memoria della struttura dati
+	 * Svuota la struttura dati
 	 */
 	abstract public void clear();
 	
 	/**
-	 * Raccoglie in un insieme tutti gli Entry contenuti in una struttura dati
+	 * Ritorna un insieme delle coppie Key-Value
 	 * @return Set di Entry
 	 */
 	
 	abstract public Set<Entry> entrySet();
 	
 	/**
-	 * Raccoglie in un ArrayList tutti gli elementi di una struttura dati
+	 * Ritorna una lista contenente i valori memorizzati
 	 * @return ArrayList di <V> Object
 	 */
 	
 	abstract public ArrayList<V> valueList();
 
 	/**
-	 * Inserisce un elemento nella struttura dati solamente se non già presente
+	 * Inserisce un elemento nella struttura dati se non già presente
 	 * @param key la stringa per la ricerca nella struttura
 	 * @param value l'elemento che và inserito
 	 */
@@ -80,7 +80,7 @@ abstract class Map<K extends Comparable<K>, V extends Object> {
 	public abstract void putIfAbsent(K key, V value);
 
 	/**
-	 * Ritorna il size della struttura dati
+	 * Ritorna il numero di elementi nella struttura dati
 	 * @return int 
 	 */
 	
