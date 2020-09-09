@@ -16,6 +16,7 @@ Al primo avvio sono presenti impostazioni di default.
 
 `setMap()` non comporta alcun cambiamento all'eventuale istanza del dizionario già presente.
 Il cambiamento viene effettuato una volta chiamata la funzione `loadFromFile(File f)`.
+E' possibile salvare i dati nel corso dell'utilizzo del programma con la funzione `saveToFile()` e riutilizzarli in un secondo momento.
 
 Con `loadFromFile(File f)` viene anche "popolato" il grafo.
 
