@@ -104,7 +104,7 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 	}
 
 	@Override
-	public Movie[] searchMostVotedMovies(Integer N) {
+	public Movie[] searchMostVotedMovies(Integer N)  {
 		ArrayList<Movie> movieList = movieMap.valueList();
 		Movie[] movieArr = movieList.toArray(new Movie[movieList.size()]);
 		switch (selectedAlg) 
@@ -216,19 +216,19 @@ public class MovidaCore implements IMovidaConfig, IMovidaDB, IMovidaSearch, IMov
 			FileWriter save = new FileWriter(f);
 			for (Map<String, Movie>.Entry e : movieMap.entrySet()) 
 			{
-				save.append("Title:" + "\t" + e.value.getTitle() + "\n");
-				save.append("Year:" + "\t" + e.value.getYear() + "\n");
-				save.append("Director:" + "\t" + e.value.getDirector().getName() + "\n");
+				save.append("Title:" + " " + e.value.getTitle() + "\n");
+				save.append("Year:" + " " + e.value.getYear() + "\n");
+				save.append("Director:"  + " " + e.value.getDirector().getName() + "\n");
 				Person cast[] = e.value.getCast();
-				save.append("Cast:" + "\t");
+				save.append("Cast:" + " ");
 				for (int i = 0; i < cast.length; i++) 
 				{
 					if (i == cast.length - 1)
 						save.append(cast[i].getName() + "\n");
 					else
-						save.append(cast[i].getName() + "," + "\t");
+						save.append(cast[i].getName() + "," + " ");
 				}
-				save.append("Votes" + "\t" + e.value.getVotes() + "\n");
+				save.append("Votes:" + " " + e.value.getVotes() + "\n");
 				save.append("\n");
 			}
 			save.close();
