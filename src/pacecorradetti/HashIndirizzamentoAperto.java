@@ -12,6 +12,7 @@ public class HashIndirizzamentoAperto<K extends Comparable<K>,V> extends pacecor
 	private Entry[] m;
 	private static Object deleted;
 	private int length = 0;
+	private int size = 0;
 	
 	@SuppressWarnings("unchecked")
 	public HashIndirizzamentoAperto(int l)
@@ -64,6 +65,7 @@ public class HashIndirizzamentoAperto<K extends Comparable<K>,V> extends pacecor
 		if(m[hash].key.equals(key))
 		{ 
 			m[hash].value = (V) deleted;
+			size--;
 		}
 		else if(m[hash] == null) 
 		{
@@ -77,6 +79,7 @@ public class HashIndirizzamentoAperto<K extends Comparable<K>,V> extends pacecor
 				if((m[hash2].key.equals(key)))
 				{
 					m[hash2].value = (V) deleted;
+					size--;
 				}
 			}
 		}
@@ -89,6 +92,7 @@ public class HashIndirizzamentoAperto<K extends Comparable<K>,V> extends pacecor
 		if((m[hash] == null) || (m[hash] == deleted))
 		{
 			m[hash] = new Entry(key,value) ;
+			size++;
 			
 		}
 		else if(m[hash].key.equals(key))
@@ -103,6 +107,7 @@ public class HashIndirizzamentoAperto<K extends Comparable<K>,V> extends pacecor
 				if((m[hash2] == null) || ((m[hash2] == deleted)))
 				{
 					m[hash2] = new Entry(key,value);
+					size++;
 					break;
 				}
 			}
@@ -149,6 +154,7 @@ public class HashIndirizzamentoAperto<K extends Comparable<K>,V> extends pacecor
 		if((m[hash] == null) || (m[hash] == deleted))
 		{
 			m[hash] = new Entry(key,value) ;
+			size++;
 			
 		}
 		else if(m[hash].key.equals(key))
@@ -163,6 +169,7 @@ public class HashIndirizzamentoAperto<K extends Comparable<K>,V> extends pacecor
 				if((m[hash2] == null) || ((m[hash2] == deleted)))
 				{
 					m[hash2] = new Entry(key,value);
+					size++;
 					break;
 				}
 			}
@@ -172,7 +179,7 @@ public class HashIndirizzamentoAperto<K extends Comparable<K>,V> extends pacecor
 	}
 	@Override
 	public int size() {
-		return m.length;
+		return size;
 	}
 	@Override
 	public String toString() {
