@@ -129,7 +129,7 @@ public class HashIndirizzamentoAperto<K extends Comparable<K>,V> extends pacecor
 		Set<Map<K, V>.Entry> temp = new HashSet<Map<K,V>.Entry>();
 		for (Map<K, V>.Entry e : m)
 		{
-			if(e != null)
+			if(e != null && !e.getValue().equals(deleted))
 			{
 			temp.add(e);
 			}
