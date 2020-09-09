@@ -140,8 +140,9 @@ public class HashIndirizzamentoAperto<K extends Comparable<K>,V> extends pacecor
 	
 	public ArrayList<V> valueList() {
 		ArrayList<V> temp = new ArrayList<V>();
-		for (int i = 0; i < size(); i++)
+		for (int i = 0; i < m.length; i++)
 		{
+			if(m[i] != null && m[i].value != deleted)
 			temp.add(m[i].getValue());
 		}
 		return temp;
